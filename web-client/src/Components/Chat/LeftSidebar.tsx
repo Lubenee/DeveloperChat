@@ -34,11 +34,15 @@ const mockChats = [
 // /{ chats, onChatClick }: LeftSidebarProps
 const LeftSidebar = () => {
   return (
-    <div className="fixed left-0 top-0 h-full bg-gray-900 text-white w-64 overflow-y-auto">
+    <div
+      className="fixed left-0 top-0 h-full bg-gray-900 text-white w-64 overflow-y-auto"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-800">
         <h1 className="text-lg font-bold">Chats</h1>
       </div>
-      <div className="overflow-y-auto">
+      <div
+        className="overflow-y-auto"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
         {mockChats.map((chat) => (
           <div
             key={chat.id}
