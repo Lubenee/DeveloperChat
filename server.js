@@ -107,7 +107,6 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.body.tokenData = decoded;
-    req.body.isTokenValid = true;
     next();
   } catch (error) {
     return res.status(403).json({ message: "Forbidden: Invalid token" });
@@ -122,18 +121,30 @@ app.get(`/api/tusers/:token`, verifyToken, (req, res) => {
 });
 
 app.patch(`/api/email-username-update`, verifyToken, (req, res) => {
-  const { username, email, id } = req.body;
+  const { tokenData, email, username } = req.body;
 
-  const user = users.find((user) => user.id === id);
-  if (!user) return res.status(404).json("User not found");
-  if (username) user.name = username;
-  if (email) user.email = email;
-  res.json({ message: "User updated successfully", user });
+  //Find the correct user
+  const userToUpdate = users.find((user) => user.id === tokenData.id);
+  if (!userToUpdate) return res.status(404).json("User not found.");
+
+  //See if the email is available
+  const isEmailTaken = users.some(
+    (user) => user.email === email && user.id !== userToUpdate.id
+  );
+  if (isEmailTaken) {
+    return res.status(403).send("Email already taken.");
+  }
+
+  // Update the data
+  if (username) userToUpdate.name = username;
+  if (email) userToUpdate.email = email;
+
+  return res.status(200).send("Updated successfully.");
 });
 
 app.patch(`/api/password-update`, verifyToken, (req, res) => {
-  const { password } = req.body;
-  const user = users.find((user) => user.email === req.email);
+  const { password, tokenData } = req.body;
+  const user = users.find((user) => user.id === tokenData.id);
   if (!user) return res.status(404).send("User not found.");
   const hashedPassword = bcrypt.hashSync(password, 10);
   user.password = hashedPassword;
@@ -141,8 +152,7 @@ app.patch(`/api/password-update`, verifyToken, (req, res) => {
 });
 
 app.get(`/api/check-valid-token`, verifyToken, (req, res) => {
-  const { isTokenValid } = req.body;
-  return res.status(200).send(isTokenValid);
+  return res.status(200).send(true);
 });
 
 app.listen(port, () => {
