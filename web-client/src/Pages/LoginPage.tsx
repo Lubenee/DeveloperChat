@@ -5,6 +5,7 @@ import useUsers from "../Hooks/useUsers";
 import CustomError from "../Components/CustomError";
 import { setTokenAndDispatchEvent } from "../utils/jwtTokenUtils";
 import { wait } from "../utils/wait";
+import LoadingIndicatorButton from "../Components/UI/LoadingIndicatorButton";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ const LoginPage = () => {
     };
 
     try {
+      setError(null);
       await wait(1000);
       const data = await getToken(userObj);
       const token = data.token;
@@ -88,21 +90,9 @@ const LoginPage = () => {
 
             {error && <CustomError message="Login failed. Please try again." />}
 
-            <div>
-              <button
-                type="submit"
-                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-                  loading ? "opacity-80 cursor-not-allowed" : ""
-                }`}>
-                {loading ? (
-                  <div className="inset-0 flex items-center justify-center">
-                    <div className="w-6 h-6 border-t-2 border-b-2 border-indigo-300 rounded-full animate-spin"></div>
-                  </div>
-                ) : (
-                  "Sign in"
-                )}
-              </button>
-            </div>
+            <LoadingIndicatorButton loading={loading}>
+              Sign in
+            </LoadingIndicatorButton>
           </form>
         </div>
       </div>
