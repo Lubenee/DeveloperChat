@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 
-type ButtonType = "submit" | "reset" | "button";
+type ButtonType = "submit" | "reset" | "button" | undefined;
 interface Props {
   loading: boolean;
   children: ReactNode;
   onClick?: () => void;
-  type?: ButtonType; // Make type prop optional
+  type?: ButtonType;
 }
 
 const LoadingIndicatorButton = ({

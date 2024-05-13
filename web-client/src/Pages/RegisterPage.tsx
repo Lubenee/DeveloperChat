@@ -4,6 +4,8 @@ import useUsers from "../Hooks/useUsers";
 import { userType } from "../types/shared-types";
 import CustomError from "../Components/CustomError";
 import { useNavigate } from "react-router-dom";
+import { wait } from "../utils/wait";
+import LoadingIndicatorButton from "../Components/UI/LoadingIndicatorButton";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +14,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [uType, setUserType] = useState<userType>(userType.Developer);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [website, setWebsite] = useState("");
   const [industry, setIndustry] = useState("");
   const [address, setAddress] = useState("");
@@ -32,6 +35,7 @@ const RegisterPage = () => {
   };
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     const passLength = 3;
     if (password !== confirmPassword) {
@@ -51,11 +55,14 @@ const RegisterPage = () => {
     };
 
     try {
+      await wait(500);
       await addUser(newUser);
       setError(null);
     } catch (err) {
       setError(err as string);
       return;
+    } finally {
+      setLoading(false);
     }
     clearInputs();
     navigate("/login");
@@ -172,13 +179,9 @@ const RegisterPage = () => {
               />
             </div>
 
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Register
-              </button>
-            </div>
+            <LoadingIndicatorButton loading={loading} type="submit">
+              Register
+            </LoadingIndicatorButton>
           </form>
         </div>
 

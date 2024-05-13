@@ -90,7 +90,7 @@ const LoginPage = () => {
 
             {error && <CustomError message="Login failed. Please try again." />}
 
-            <LoadingIndicatorButton loading={loading}>
+            <LoadingIndicatorButton loading={loading} type="submit">
               Sign in
             </LoadingIndicatorButton>
           </form>

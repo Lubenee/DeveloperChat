@@ -1,6 +1,8 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import CustomError from "../CustomError";
 import Success from "../Success";
+import LoadingIndicatorButton from "../UI/LoadingIndicatorButton";
+import { wait } from "../../utils/wait";
 
 interface Props {
   username: string;
@@ -38,6 +40,31 @@ const ChangeData = ({
   handlePasswordSubmit,
   handleUsernameEmailSubmit,
 }: Props) => {
+  const [updateEmailLoading, setUpdateEmailLoading] = useState(false);
+  const [updatePasswordLoading, setUpdatePasswordLoading] = useState(false);
+  const [logOutLoading, setLogoutLoading] = useState(false);
+
+  const onEmailUsernameSubmit = async (ev: FormEvent) => {
+    setUpdateEmailLoading(true);
+    handleUsernameEmailSubmit(ev);
+    await wait(500);
+    setUpdateEmailLoading(false);
+  };
+
+  const onPasswordSubmit = async (ev: FormEvent) => {
+    setUpdatePasswordLoading(true);
+    handlePasswordSubmit(ev);
+    await wait(500);
+    setUpdatePasswordLoading(false);
+  };
+
+  const onLogout = async () => {
+    setLogoutLoading(true);
+    logOut();
+    await wait(500);
+    setLogoutLoading(false);
+  };
+
   return (
     <div className="p-8 bg-white rounded-lg shadow-lg max-w-5xl">
       <div className="grid grid-cols-2 gap-20">
@@ -46,7 +73,7 @@ const ChangeData = ({
           <h2 className="text-3xl font-bold text-gray-800 mb-4">
             Edit Username & Email
           </h2>
-          <form onSubmit={handleUsernameEmailSubmit}>
+          <form onSubmit={onEmailUsernameSubmit}>
             <div className="mb-6">
               <label
                 htmlFor="username"
@@ -81,17 +108,20 @@ const ChangeData = ({
                 reason={nameEmailError}
               />
             )}
-            <button
-              type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
-              Update Username & Email
-            </button>
+            <div className="mb-3">
+              <LoadingIndicatorButton
+                loading={updateEmailLoading}
+                type="submit">
+                Update Username & Email
+              </LoadingIndicatorButton>
+            </div>
           </form>
-          <button
-            onClick={logOut}
-            className="px-4 py-2 mt-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
+          <LoadingIndicatorButton
+            loading={logOutLoading}
+            onClick={onLogout}
+            type={undefined}>
             Log Out
-          </button>
+          </LoadingIndicatorButton>
         </div>
 
         {/* Right box for changing password */}
@@ -99,7 +129,7 @@ const ChangeData = ({
           <h2 className="text-3xl font-bold text-gray-800 mb-4">
             Change Password
           </h2>
-          <form onSubmit={handlePasswordSubmit}>
+          <form onSubmit={onPasswordSubmit}>
             <div className="mb-6">
               <label
                 htmlFor="newPassword"
@@ -136,11 +166,11 @@ const ChangeData = ({
                 reason={passwordError}
               />
             )}
-            <button
-              type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700">
-              Change Password
-            </button>
+            <LoadingIndicatorButton
+              loading={updatePasswordLoading}
+              type="submit">
+              ChangePassword
+            </LoadingIndicatorButton>
             {success && <Success message={success} />}
           </form>
         </div>
