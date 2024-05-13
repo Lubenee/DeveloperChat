@@ -4,13 +4,14 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+require("dotenv").config();
 
 const { v4: uuidv4 } = require("uuid"); // Import v4 function from uuid package for ID generation
 const { jwtDecode } = require("jwt-decode");
 
 const app = express();
 const PORT = 5000;
-const TOKEN_KEY = "secretkey";
+const TOKEN_KEY = process.env.JWT_SECRET_KEY;
 
 // Middleware
 app.use(cors());
@@ -21,21 +22,6 @@ let users = JSON.parse(fs.readFileSync("users.json", "utf-8"));
 
 app.get("/", (req, res) => {
   return res.json(users);
-});
-
-// Protected route - Requires token for access
-app.get("/api/protectedData", (req, res) => {
-  const token = req.headers.authorization;
-
-  // In a real-world application, you would validate and decode the token
-  // to ensure its authenticity and retrieve the user's information.
-
-  // For simplicity, we'll just check if the token is present.
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
-  // In a real-world scenario, you would fetch the protected data from a database.
-  const protectedData = "This is protected data";
-  return res.status(200).json({ data: protectedData });
 });
 
 // Login endpoint, returns a JWT token
