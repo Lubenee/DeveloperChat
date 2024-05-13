@@ -2,7 +2,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { UserCreateDto } from "../types/users/users-model";
 import useUsers from "../Hooks/useUsers";
 import { userType } from "../types/shared-types";
-import CustomError from "../Components/CustomError";
+import CustomError from "../Components/UI/CustomError";
 import { useNavigate } from "react-router-dom";
 import { wait } from "../utils/wait";
 import LoadingIndicatorButton from "../Components/UI/LoadingIndicatorButton";

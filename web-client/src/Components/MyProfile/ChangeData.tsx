@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import CustomError from "../CustomError";
+import CustomError from "../UI/CustomError";
 import Success from "../Success";
 import LoadingIndicatorButton from "../UI/LoadingIndicatorButton";
 import { wait } from "../../utils/wait";
