@@ -46,22 +46,22 @@ const ChangeData = ({
 
   const onEmailUsernameSubmit = async (ev: FormEvent) => {
     setUpdateEmailLoading(true);
-    handleUsernameEmailSubmit(ev);
     await wait(500);
+    handleUsernameEmailSubmit(ev);
     setUpdateEmailLoading(false);
   };
 
   const onPasswordSubmit = async (ev: FormEvent) => {
     setUpdatePasswordLoading(true);
-    handlePasswordSubmit(ev);
     await wait(500);
+    handlePasswordSubmit(ev);
     setUpdatePasswordLoading(false);
   };
 
   const onLogout = async () => {
     setLogoutLoading(true);
-    logOut();
     await wait(500);
+    logOut();
     setLogoutLoading(false);
   };
 
