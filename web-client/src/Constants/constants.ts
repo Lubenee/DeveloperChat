@@ -1,4 +1,4 @@
-export const baseUrl = "http://192.168.100.30:5000";
+export const baseUrl = "";
 export const LOGIN = "api/login";
 export const REGISTER = "api/register";
 

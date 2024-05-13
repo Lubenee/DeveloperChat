@@ -23,7 +23,6 @@ const LoginPage = () => {
       const data = await getToken(userObj);
       const token = data.token;
       setTokenAndDispatchEvent(token);
-      console.log("Here");
 
       navigate("/");
     } catch (error) {
