@@ -16,6 +16,7 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
     if (!isUserLoggedIn) return;
     const token = localStorage.getItem(jwtToken);
     if (!token) return;
+
     const decode: jwtTokenInterface = jwtDecode(token);
     setName(decode.name);
   }, [isUserLoggedIn]);

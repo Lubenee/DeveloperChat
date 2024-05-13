@@ -6,25 +6,25 @@ import useUsers from "./Hooks/useUsers";
 import useJWTTokenListener from "./Hooks/useJWTTokenListener";
 
 const App = () => {
-  const jwtToken = useJWTTokenListener();
+  const token = useJWTTokenListener();
   const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
   const { verifyToken } = useUsers();
 
   useEffect(() => {
     const verifyUser = async () => {
       try {
-        if (!jwtToken) {
+        if (!token) {
           setIsUserLoggedIn(false);
           return;
         }
-        const res = await verifyToken(jwtToken);
+        const res = await verifyToken(token);
         setIsUserLoggedIn(res);
       } catch (err) {
         console.error(err);
       }
     };
     verifyUser();
-  }, [jwtToken]);
+  }, [token]);
 
   return (
     <Router>

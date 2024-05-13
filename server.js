@@ -7,11 +7,10 @@ const fs = require("fs");
 require("dotenv").config();
 
 const { v4: uuidv4 } = require("uuid"); // Import v4 function from uuid package for ID generation
-const { jwtDecode } = require("jwt-decode");
 
 const app = express();
-const PORT = 5000;
-const TOKEN_KEY = process.env.JWT_SECRET_KEY;
+const JWT_SECRET = process.env.JWT_SECRET;
+const port = process.env.SERVER_PORT;
 
 // Middleware
 app.use(cors());
@@ -47,7 +46,7 @@ app.post("/api/login", (req, res) => {
     // If authentication is successful, generate a JWT token
     const token = jwt.sign(
       { id: user.id, email: user.email, name: user.name },
-      TOKEN_KEY,
+      JWT_SECRET,
       {
         expiresIn: "1h",
       }
@@ -87,19 +86,6 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-app.get(`/api/tusers/:token`, (req, res) => {
-  const token = req.params.token;
-  try {
-    jwt.verify(token, TOKEN_KEY);
-    const decoded = jwtDecode(token);
-    const user = users.find((u) => u.id === decoded.id);
-    if (!user) return res.status(404).json({ message: "User not found." });
-    return res.status(200).json(user);
-  } catch (err) {
-    return res.status(403).json({ message: "Invalid token." });
-  }
-});
-
 // Endpoint to get a user by username
 app.get("/api/users/:username", (req, res) => {
   // Extract the username from the request parameters
@@ -113,21 +99,23 @@ app.get("/api/users/:username", (req, res) => {
 });
 
 // Middleware to verify JWT token from headers
-const verifyTokenMiddleware = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: Missing token" });
   }
   try {
-    const decoded = jwt.verify(token, TOKEN_KEY);
-    req.email = decoded.email; // Attach decoded email to request object
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // Attach decoded email to request object
+    req.body.email = decoded.email;
+    req.body.isTokenValid = true;
     next();
   } catch (error) {
     return res.status(403).json({ message: "Forbidden: Invalid token" });
   }
 };
 
-app.patch(`/api/email-username-update`, verifyTokenMiddleware, (req, res) => {
+app.patch(`/api/email-username-update`, verifyToken, (req, res) => {
   const { username, email } = req.body;
   const existingEmail = users.find((user) => user.email === email);
   if (existingEmail) return res.status(403).send("Email already taken.");
@@ -139,9 +127,15 @@ app.patch(`/api/email-username-update`, verifyTokenMiddleware, (req, res) => {
   res.json({ message: "User updated successfully", user });
 });
 
-app.patch(`/api/password-update`, verifyTokenMiddleware, (req, res) => {
+app.get(`/api/tusers/:token`, verifyToken, (req, res) => {
+  const { email } = req.body;
+  const user = users.find((u) => u.email === email);
+  if (!user) return res.status(404).json({ message: "User not found." });
+  return res.status(200).json(user);
+});
+
+app.patch(`/api/password-update`, verifyToken, (req, res) => {
   const { password } = req.body;
-  console.log("PASS: ", password);
   const user = users.find((user) => user.email === req.email);
   if (!user) return res.status(404).send("User not found.");
   const hashedPassword = bcrypt.hashSync(password, 10);
@@ -149,23 +143,10 @@ app.patch(`/api/password-update`, verifyTokenMiddleware, (req, res) => {
   return res.send("Password updated successfully");
 });
 
-const verifyToken = (req, res) => {
-  const token = req.headers.authorization;
-  // 401 - Unauthorized: Lacks valid authentication.
-  if (!token)
-    return res
-      .status(401)
-      .json({ message: "No token was provided.", isValid: false });
-  try {
-    jwt.verify(token, TOKEN_KEY);
-    return res.status(200).json({ message: "Token is valid.", isValid: true });
-  } catch (err) {
-    // 403 - Forbidden: Request understood, but the server doesn't authorize it.
-    return res.status(403).json({ message: "Invalid token.", isValid: false });
-  }
-};
-app.get("/api/check-valid-token", verifyToken);
+app.get(`/api/check-valid-token`, verifyToken, (req, res) => {
+  return req.body.isTokenValid;
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Developer Chat Server listening at http://localhost:${port}`);
 });

@@ -16,7 +16,6 @@ const useUsers = () => {
   // That's meant to be used when a user registers
   const addUser = async (user: UserCreateDto) => {
     if (user.type === userType.Undefined) throw new Error("User type not set.");
-    console.log(baseUrl);
     await fetchData(`${baseUrl}/${REGISTER}`, {
       method: "POST",
       headers: {
@@ -45,7 +44,13 @@ const useUsers = () => {
   // Verifies the token and returns all user info
   const getUserFromToken = async (token: string) => {
     try {
-      const res = await fetchData(`${baseUrl}/api/tusers/${token}`);
+      const res = await fetchData(`${baseUrl}/api/tusers/${token}`, {
+        method: "GET",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
       return await res.json();
     } catch (err) {
       console.error("useUsers::getUserFromToken:", err);
