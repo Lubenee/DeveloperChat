@@ -4,13 +4,18 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const http = require("http");
 require("dotenv").config();
 
 const { v4: uuidv4 } = require("uuid"); // Import v4 function from uuid package for ID generation
+const initializeChat = require("./services/chatService");
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
 const port = process.env.SERVER_PORT;
+const server = http.createServer(app);
+
+initializeChat(server);
 
 // Middleware
 app.use(cors());
