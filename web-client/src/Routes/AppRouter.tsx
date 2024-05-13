@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import RegisterPage from "../Pages/RegisterPage";
 import DevPage from "../Pages/DevPage";
 import CompanyPage from "../Pages/CompanyPage";
-import LoginPage from "../Pages/Login";
+import LoginPage from "../Pages/LoginPage";
 import HomePage from "../Pages/HomePage";
 import TestPage from "../Pages/TestPage";
 import MyProfilePage from "../Pages/MyProfilePage";

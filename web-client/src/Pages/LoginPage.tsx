@@ -4,15 +4,18 @@ import { useNavigate } from "react-router-dom";
 import useUsers from "../Hooks/useUsers";
 import CustomError from "../Components/CustomError";
 import { setTokenAndDispatchEvent } from "../utils/jwtTokenUtils";
+import { wait } from "../utils/wait";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { getToken } = useUsers();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     e.preventDefault();
     const userObj: userLoginData = {
       email: email,
@@ -20,20 +23,22 @@ const LoginPage = () => {
     };
 
     try {
+      await wait(1000);
       const data = await getToken(userObj);
       const token = data.token;
       setTokenAndDispatchEvent(token);
-
       navigate("/");
     } catch (error) {
       setError((error as Error).message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen  bg-gradient-to-b from-purple-500 to-blue-600 flex flex-col justify-center sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-purple-500 to-blue-600 flex flex-col justify-center sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
+        <h2 className="text-center text-3xl font-extrabold text-white">
           Sign in to your account
         </h2>
       </div>
@@ -86,8 +91,16 @@ const LoginPage = () => {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Sign in
+                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                  loading ? "opacity-80 cursor-not-allowed" : ""
+                }`}>
+                {loading ? (
+                  <div className="inset-0 flex items-center justify-center">
+                    <div className="w-6 h-6 border-t-2 border-b-2 border-indigo-300 rounded-full animate-spin"></div>
+                  </div>
+                ) : (
+                  "Sign in"
+                )}
               </button>
             </div>
           </form>
