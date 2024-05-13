@@ -1,30 +1,10 @@
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import AppRouter from "./Routes/AppRouter";
-import { useEffect, useState } from "react";
-import useUsers from "./Hooks/useUsers";
-import useJWTTokenListener from "./Hooks/useJWTTokenListener";
+import useValidUser from "./Hooks/useValidUser";
 
 const App = () => {
-  const token = useJWTTokenListener();
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState<boolean>(false);
-  const { verifyToken } = useUsers();
-
-  useEffect(() => {
-    const verifyUser = async () => {
-      try {
-        if (!token) {
-          setIsUserLoggedIn(false);
-          return;
-        }
-        const res = await verifyToken(token);
-        setIsUserLoggedIn(res);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    verifyUser();
-  }, [token]);
+  const { isUserLoggedIn } = useValidUser();
 
   return (
     <Router>
