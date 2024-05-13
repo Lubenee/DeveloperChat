@@ -16,7 +16,6 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
     if (!isUserLoggedIn) return;
     const token = localStorage.getItem(jwtToken);
     if (!token) return;
-
     const decode: jwtTokenInterface = jwtDecode(token);
     setName(decode.name);
   }, [isUserLoggedIn]);
@@ -44,7 +43,7 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
           <div className="text-gray-400 hover:text-white mr-4">Services</div>
           <div className="text-gray-400 hover:text-white">Contact</div>
         </div>
-        {isUserLoggedIn == false ? (
+        {isUserLoggedIn === false ? (
           <div className="flex items-center">
             <button
               className="text-gray-400 hover:text-white mr-4"

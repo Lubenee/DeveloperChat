@@ -106,8 +106,7 @@ const verifyToken = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    // Attach decoded email to request object
-    req.body.email = decoded.email;
+    req.body.tokenData = decoded;
     req.body.isTokenValid = true;
     next();
   } catch (error) {
@@ -115,23 +114,21 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-app.patch(`/api/email-username-update`, verifyToken, (req, res) => {
-  const { username, email } = req.body;
-  const existingEmail = users.find((user) => user.email === email);
-  if (existingEmail) return res.status(403).send("Email already taken.");
+app.get(`/api/tusers/:token`, verifyToken, (req, res) => {
+  const { tokenData } = req.body;
+  const user = users.find((u) => u.id === tokenData.id);
+  if (!user) return res.status(404).json({ message: "User not found." });
+  return res.status(200).json(user);
+});
 
-  const user = users.find((user) => user.email === req.email);
+app.patch(`/api/email-username-update`, verifyToken, (req, res) => {
+  const { username, email, id } = req.body;
+
+  const user = users.find((user) => user.id === id);
   if (!user) return res.status(404).json("User not found");
   if (username) user.name = username;
   if (email) user.email = email;
   res.json({ message: "User updated successfully", user });
-});
-
-app.get(`/api/tusers/:token`, verifyToken, (req, res) => {
-  const { email } = req.body;
-  const user = users.find((u) => u.email === email);
-  if (!user) return res.status(404).json({ message: "User not found." });
-  return res.status(200).json(user);
 });
 
 app.patch(`/api/password-update`, verifyToken, (req, res) => {
@@ -144,7 +141,8 @@ app.patch(`/api/password-update`, verifyToken, (req, res) => {
 });
 
 app.get(`/api/check-valid-token`, verifyToken, (req, res) => {
-  return req.body.isTokenValid;
+  const { isTokenValid } = req.body;
+  return res.status(200).send(isTokenValid);
 });
 
 app.listen(port, () => {

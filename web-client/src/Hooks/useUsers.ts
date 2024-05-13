@@ -101,8 +101,8 @@ const useUsers = () => {
           Authorization: token ? token : "",
         },
       });
-      const data = await res.json();
-      return data.isValid;
+      // Should return true or false depending on whether the token is valid or not
+      return await res.json();
     } catch (err) {
       console.error(err);
       throw err;
