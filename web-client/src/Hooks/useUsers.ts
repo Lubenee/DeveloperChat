@@ -1,9 +1,10 @@
 //name, email, password, id,
 
 import { jwtToken, userType } from "../types/shared-types";
-import { baseUrl, REGISTER, LOGIN } from "../Constants/constants";
+import { REGISTER, LOGIN } from "../Constants/constants";
 import { UserCreateDto, userLoginData } from "../types/users/users-model";
 import { Developer } from "../types/users/dev-model";
+const baseUrl = import.meta.env.VITE_SERVER_HOST;
 
 export interface jwtTokenInterface {
   name: string;
@@ -15,6 +16,7 @@ const useUsers = () => {
   // That's meant to be used when a user registers
   const addUser = async (user: UserCreateDto) => {
     if (user.type === userType.Undefined) throw new Error("User type not set.");
+    console.log(baseUrl);
     await fetchData(`${baseUrl}/${REGISTER}`, {
       method: "POST",
       headers: {
