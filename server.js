@@ -8,7 +8,7 @@ const http = require("http");
 require("dotenv").config();
 
 const { v4: uuidv4 } = require("uuid"); // Import v4 function from uuid package for ID generation
-const initializeChat = require("./services/chatService");
+const initializeChat = require("./services/chat-service");
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
