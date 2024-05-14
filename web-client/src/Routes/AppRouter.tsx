@@ -7,6 +7,7 @@ import HomePage from "../Pages/HomePage";
 import TestPage from "../Pages/TestPage";
 import MyProfilePage from "../Pages/MyProfilePage";
 import NotFoundPage from "../Pages/NotFoundPage";
+import AboutPage from "../Pages/AboutPage";
 
 const AppRouter = () => {
   return (
@@ -19,6 +20,7 @@ const AppRouter = () => {
       <Route path="/my-profile" element={<MyProfilePage />} />
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/test" element={<TestPage />} />
+      <Route path="/about" element={<AboutPage />} />
     </Routes>
   );
 };

@@ -37,10 +37,14 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
           </div>
           <div
             className="text-gray-400 hover:text-white mr-4"
-            onClick={() => navigate("/test")}>
+            onClick={() => navigate("/about")}>
             About
           </div>
-          <div className="text-gray-400 hover:text-white mr-4">Services</div>
+          <div
+            className="text-gray-400 hover:text-white mr-4"
+            onClick={() => navigate("/test")}>
+            Services
+          </div>
           <div className="text-gray-400 hover:text-white">Contact</div>
         </div>
         {isUserLoggedIn === false ? (
