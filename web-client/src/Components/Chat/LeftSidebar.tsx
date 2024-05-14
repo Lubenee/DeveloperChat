@@ -1,7 +1,5 @@
-interface Chat {
-  id: string;
-  name: string;
-}
+import { Chat } from "../../types/chat/chats-model";
+import ChatUser from "./ChatUser";
 
 interface LeftSidebarProps {
   chats: Chat[];
@@ -35,7 +33,7 @@ const mockChats = [
 const LeftSidebar = () => {
   return (
     <div
-      className="fixed left-0 top-0 h-full bg-gray-900 text-white w-64 overflow-y-auto"
+      className="fixed left-0 top-0 h-full bg-gray-900   text-white w-64 overflow-y-auto"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-800">
         <h1 className="text-lg font-bold">Chats</h1>
@@ -44,14 +42,7 @@ const LeftSidebar = () => {
         className="overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
         {mockChats.map((chat) => (
-          <div
-            key={chat.id}
-            className="flex items-center px-4 py-3 hover:bg-gray-800 cursor-pointer"
-            // onClick={() => onChatClick(chat.id)}
-          >
-            <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
-            <div className="ml-3">{chat.name}</div>
-          </div>
+          <ChatUser chat={chat} />
         ))}
       </div>
     </div>

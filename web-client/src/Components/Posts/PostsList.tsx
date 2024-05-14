@@ -27,6 +27,72 @@ const PostsList = () => {
       company: "Design Studio",
       date: "5 days ago",
     },
+    {
+      title: "Frontend Developer",
+      location: "Austin",
+      company: "Web Solutions",
+      date: "1 day ago",
+    },
+    {
+      title: "Backend Developer",
+      location: "Seattle",
+      company: "Cloud Services",
+      date: "6 days ago",
+    },
+    {
+      title: "Mobile Developer",
+      location: "Boston",
+      company: "App Creators",
+      date: "7 days ago",
+    },
+    {
+      title: "System Administrator",
+      location: "Denver",
+      company: "IT Support",
+      date: "8 days ago",
+    },
+    {
+      title: "DevOps Engineer",
+      location: "Miami",
+      company: "Deployments Inc",
+      date: "9 days ago",
+    },
+    {
+      title: "Cybersecurity Analyst",
+      location: "Washington DC",
+      company: "SecureTech",
+      date: "10 days ago",
+    },
+    {
+      title: "Project Manager",
+      location: "Philadelphia",
+      company: "Management Solutions",
+      date: "11 days ago",
+    },
+    {
+      title: "Business Analyst",
+      location: "Houston",
+      company: "Market Insights",
+      date: "12 days ago",
+    },
+    {
+      title: "Network Engineer",
+      location: "Atlanta",
+      company: "Network Innovations",
+      date: "13 days ago",
+    },
+    {
+      title: "AI Researcher",
+      location: "Palo Alto",
+      company: "AI Labs",
+      date: "14 days ago",
+    },
+    {
+      title: "QA Engineer",
+      location: "San Diego",
+      company: "Quality Assurance Co",
+      date: "15 days ago",
+    },
   ];
 
   return (
