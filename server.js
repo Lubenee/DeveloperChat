@@ -13,9 +13,9 @@ const initializeChat = require("./services/chat-service");
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
 const port = process.env.SERVER_PORT;
-const server = http.createServer(app);
+const httpServer = http.createServer(app);
 
-initializeChat(server);
+initializeChat(httpServer);
 
 // Middleware
 app.use(cors());
@@ -144,6 +144,8 @@ app.patch(`/api/email-username-update`, verifyToken, (req, res) => {
   if (username) userToUpdate.name = username;
   if (email) userToUpdate.email = email;
 
+  fs.writeFileSync("users.json", JSON.stringify(users));
+
   return res.status(200).send("Updated successfully.");
 });
 
@@ -153,6 +155,7 @@ app.patch(`/api/password-update`, verifyToken, (req, res) => {
   if (!user) return res.status(404).send("User not found.");
   const hashedPassword = bcrypt.hashSync(password, 10);
   user.password = hashedPassword;
+  fs.writeFileSync("users.json", JSON.stringify(users));
   return res.send("Password updated successfully");
 });
 
