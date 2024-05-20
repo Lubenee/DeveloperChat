@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { getAllUsers, verifyToken } = require("../services/user-service");
 const JWT_SECRET = process.env.JWT_SECRET;
+const SALT = process.env.BCRYPT_SALT;
 const bcrypt = require("bcrypt");
 const postgres = require("../postgres");
 const { default: jwtDecode } = require("jwt-decode");
@@ -25,7 +26,7 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password, type } = req.body;
 
-        const salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(BCRYPT_SALT);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const insertedUsers = await postgres("users")
@@ -74,20 +75,71 @@ router.post("/login", async (req, res) => {
     }
 });
 
-app.get(`/check-valid-token`, (req, res) => {
+router.get(`/check-valid-token`, (req, res) => {
     const token = req.headers.authorization;
     if (verifyToken(token)) return res.status(200).send(true);
     return res.status(403).json({ message: "Forbidden: Invalid token" });
 });
 
-app.get(`/api/tusers/:token`, (req, res) => {
+router.get(`/tusers/:token`, async (req, res) => {
     const token = req.headers.authorization;
     if (!validToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
-    const user = await postgres('users').where({ decoded.email });
+    const user = await postgres('users').where({ id: decoded.id });
     if (!user) return res.status(404).json({ message: "User not found." });
     return res.status(200).json(user);
+});
+
+router.patch(`/email-username-update`, async (req, res) => {
+    const { email, username } = req.body;
+    const token = req.headers.authorization;
+    if (!validToken(token))
+        return res.status(403).json({ message: "Forbidden: Invalid token" });
+    const decoded = jwtDecode(token);
+
+    try {
+
+        const userToUpdate = await postgres('users').where({ id: decoded.id });
+        if (!userToUpdate) return res.status(404).json("User not found.");
+
+        //See if the email is available
+        const isEmailTaken = await postgres('users').where({ email });
+        if (isEmailTaken)
+            return res.status(403).send("Email already taken.");
+
+        await postgres('users').where({ id: decoded.id }).update({ name: username, email: email });
+        return res.status(200).send("Updated successfully.");
+    }
+    catch (err) {
+        console.error("Error updating username & email", err);
+        return res.status(500).send("Server error.");
+    }
+});
+
+router.patch(`/password-update`, async (req, res) => {
+    const token = req.headers.authorization;
+    if (!validToken(token))
+        return res.status(403).json({ message: "Forbidden: Invalid token" });
+    const decoded = jwtDecode(token);
+
+    const { password } = req.body;
+
+    try {
+        const user = await postgres('login').where({ user_id: decoded.id }).first();
+        if (!user) return res.status(404).send('User not found.');
+
+        const hashedPassword = bcrypt.hashSync(password, BCRYPT_SALT);
+
+        await postgres('login')
+            .where({ user_id: decoded.id })
+            .update({ hash: hashedPassword });
+
+        return res.send('Password updated successfully');
+    } catch (err) {
+        console.error('Error updating password:', err);
+        return res.status(500).send('Server error.');
+    }
 });
 
 module.exports = router;
