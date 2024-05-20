@@ -137,9 +137,24 @@ router.patch(`/password-update`, async (req, res) => {
 
         return res.send('Password updated successfully');
     } catch (err) {
-        console.error('Error updating password:', err);
+        console.error('Error updating password', err);
         return res.status(500).send('Server error.');
     }
+});
+
+app.get("/api/users/:username", async (req, res) => {
+    const username = req.params.username;
+
+    try {
+        const user = await postgres('users').where({ name: username });
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        return res.status(200).json(user);
+    }
+    catch (err) {
+        console.error("Error fetching user", err);
+    }
+
 });
 
 module.exports = router;
