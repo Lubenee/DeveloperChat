@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const { getAllUsers } = require('../services/user-service');
 const JWT_SECRET = process.env.JWT_SECRET;
 const bcrypt = require("bcrypt");
+const postgres = require("../postgres");
+
 
 // Login endpoint, returns a JWT token
 // JWT SIGNATURE:
@@ -18,26 +20,33 @@ router.get('/', async (req, res) => {
     res.status(200).json({ message: " implemented" });
 });
 
-// //TODO: Register must fail on a username that's unavailable, or an email that's already used
-// // Register endpoint, returns a message and a status
+// Register endpoint, returns a message and a status
 router.post('/register', async (req, res) => {
     try {
         const { name, email, password, type } = req.body;
-        const emailLowerCase = email.toLowerCase();
 
-        const hashedPassword = bcrypt.hashSync(password, 10);
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
 
-        const newUser = {
-            name,
-            email: emailLowerCase,
-            password: hashedPassword,
-            type,
-        };
+        const insertedUsers = await postgres('users')
+            .insert({ name, type, email: email.toLowerCase(), joined: new Date() })
+            .returning('id');
+        const userId = insertedUsers[0].id;
 
-        res.setHeader("Content-Type", "application/json");
-        return res.status(201).send("Registered successfully");
-    } catch (error) {
-        return res.status(500).send("An unexpected error occurred");
+        await postgres('login').insert({
+            user_id: userId,
+            hash: hashedPassword,
+            email: email.toLowerCase(),
+        })
+
+        return res.status(201).send('User added successfully');
+    } catch (err) {
+        console.error(err);
+        if (err.code === '23505') { // Unique violation
+            res.status(400).send('Email already exists.');
+        } else {
+            res.status(500).send('Server error.');
+        }
     }
 });
 
