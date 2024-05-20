@@ -52,30 +52,30 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/login', async (req, res) => {
-    //   const { email, password } = req.body;
-    //   const emailLowerCase = email.toLowerCase();
-    //   const user = users.find((u) => u.email === emailLowerCase);
-    //   if (!user) return res.status(401).json({ message: "User not found" });
+    const { email, password } = req.body;
 
-    //   // Compare the provided password with the hashed password stored in the user object
-    //   bcrypt.compare(password, user.password, (err, result) => {
-    //     // If there's an error or the password doesn't match, return 401 Unauthorized
-    //     if (err || !result) {
-    //       return res.status(401).json({ message: "Invalid email or password" });
-    //     }
+    try {
+        //.first(): This limits the result to the first matching record and returns it. 
+        const userLogin = await postgres('login').where({ email }).first();
 
-    //     // If authentication is successful, generate a JWT token
-    //     const token = jwt.sign(
-    //       { id: user.id, email: user.email, name: user.name },
-    //       JWT_SECRET,
-    //       {
-    //         expiresIn: "1h",
-    //       }
-    //     );
+        if (!userLogin || !bcrypt.compareSync(password, userLogin.hash))
+            res.status(400).send('Invalid email or password.');
 
-    //     // Return the token in the response
-    //     res.status(200).json({ token });
-    //   });
+        // If authentication is successful, generate a JWT token
+        const token = jwt.sign(
+            { id: userLogin.id, email: userLogin.email, name: userLogin.name },
+            JWT_SECRET,
+            {
+                expiresIn: "1h",
+            });
+        // Return the token in the response
+        res.status(200).json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error.');
+    }
+
+
 });
 
 module.exports = router;
