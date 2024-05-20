@@ -1,0 +1,4 @@
+Business Logic: Services contain the core business logic of your application. They perform operations like data processing, calculations, and interactions with the database or other APIs.
+Reusability: Services can be reused across different controllers and other parts of the application.
+Database Interaction: Services typically interact with the data layer (e.g., calling models or repositories) to perform CRUD operations.
+Decoupling: They help in decoupling business logic from the controllers, making the code more modular and easier to test.

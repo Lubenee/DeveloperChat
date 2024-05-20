@@ -1,0 +1,6 @@
+Responsibilities:
+
+Handle HTTP Requests: Controllers are responsible for handling incoming HTTP requests and sending appropriate HTTP responses.
+Route Handling: They map URL routes to specific functions or methods.
+Request Validation: Controllers often validate the incoming request data (though this can also be done via middleware).
+Response Construction: They construct and send the response back to the client.
