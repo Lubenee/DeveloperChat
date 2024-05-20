@@ -1,5 +1,5 @@
-export const LOGIN = "api/login";
-export const REGISTER = "api/register";
+export const LOGIN = "api/user/login";
+export const REGISTER = "api/user/register";
 
 export const usersEndpoint = "users";
 export const devsEndpoint = "devs";
