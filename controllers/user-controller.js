@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const { getAllUsers } = require('../services/user-service');
+const { getAllUsers, verifyToken } = require('../services/user-service');
 const JWT_SECRET = process.env.JWT_SECRET;
 const bcrypt = require("bcrypt");
 const postgres = require("../postgres");
@@ -50,7 +50,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -74,8 +73,15 @@ router.post('/login', async (req, res) => {
         console.error(err);
         res.status(500).send('Server error.');
     }
-
-
 });
+
+app.get(`/check-valid-token`, (req, res) => {
+    const token = req.headers.authorization;
+    if (verifyToken(token))
+        return res.status(200).send(true);
+    return res.status(403).json({ message: "Forbidden: Invalid token" });
+});
+
+
 
 module.exports = router;
