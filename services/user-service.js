@@ -1,5 +1,6 @@
 // models/userModel.js
 const postgres = require('../postgres');
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async () => {
     try {
@@ -10,12 +11,18 @@ const getAllUsers = async () => {
     }
 };
 
-const createUser = async (userData) => {
-    const [newUser] = await postgres('users').insert(userData).returning('*');
-    return newUser;
+// Middleware to verify JWT token from headers
+const verifyToken = (token) => {
+    if (!token) return false;
+    try {
+        jwt.verify(token, JWT_SECRET);
+    } catch (error) {
+        return false;
+    }
+    return true;
 };
 
 module.exports = {
     getAllUsers,
-    createUser,
+    verifyToken
 };
