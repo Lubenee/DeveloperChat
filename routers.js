@@ -1,4 +1,3 @@
-// routers.js
 const express = require('express');
 const userRoutes = require('./controllers/user-controller');
 
