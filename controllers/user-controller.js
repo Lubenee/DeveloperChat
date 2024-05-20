@@ -52,7 +52,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post(`/login`, async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -81,7 +81,7 @@ router.get(`/check-valid-token`, (req, res) => {
     return res.status(403).json({ message: "Forbidden: Invalid token" });
 });
 
-router.get(`/tusers/:token`, async (req, res) => {
+router.get(`/:token`, async (req, res) => {
     const token = req.headers.authorization;
     if (!validToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
@@ -142,7 +142,7 @@ router.patch(`/password-update`, async (req, res) => {
     }
 });
 
-app.get("/api/users/:username", async (req, res) => {
+app.get(`/:username`, async (req, res) => {
     const username = req.params.username;
 
     try {
