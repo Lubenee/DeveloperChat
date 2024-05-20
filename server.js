@@ -17,6 +17,42 @@ const httpServer = http.createServer(app);
 
 initializeChat(httpServer);
 
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////DB/////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
+const { Client } = require("pg");
+
+const client = new Client({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+});
+
+client
+  .connect()
+  .then(() => {
+    console.log('Connected to PostgreSQL database');
+  })
+  .catch((err) => {
+    console.error('Error connecting to PostgreSQL database', err);
+  });
+
+const getUsers = async () => {
+  try {
+    const result = await client.query('SELECT * FROM users');
+    return result.rows; // Access the rows property of the result
+  } catch (err) {
+    console.error('Error executing query', err);
+    throw err; // Re-throw the error after logging it
+  }
+};
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,8 +60,9 @@ app.use(bodyParser.json());
 // Load users data
 let users = JSON.parse(fs.readFileSync("users.json", "utf-8"));
 
-app.get("/", (req, res) => {
-  return res.json(users);
+app.get("/", async (req, res) => {
+  const usersdb = await getUsers();
+  return res.json(usersdb);
 });
 
 // Login endpoint, returns a JWT token
