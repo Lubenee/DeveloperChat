@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const getAllUsers = async () => {
     try {
-        return (await postgres().select('*')).from('users');
+        return (await postgres('users').select('*'));
     } catch (err) {
         console.error('Error executing query', err);
         throw err;
