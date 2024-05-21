@@ -17,8 +17,8 @@ const { default: jwtDecode } = require("jwt-decode");
 // }
 
 router.get("/", async (req, res) => {
-    console.log(await getAllUsers());
-    res.status(200).json({ message: " implemented" });
+    const users = await getAllUsers();
+    res.status(200).json({ users });
 });
 
 // Register endpoint, returns a message and a status
@@ -26,7 +26,8 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password, type } = req.body;
 
-        const salt = bcrypt.genSaltSync(BCRYPT_SALT);
+        //todo - use dotenv variable
+        const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const insertedUsers = await postgres("users")
@@ -78,7 +79,7 @@ router.post(`/login`, async (req, res) => {
 router.get(`/check-valid-token`, (req, res) => {
     const token = req.headers.authorization;
     if (verifyToken(token)) return res.status(200).send(true);
-    return res.status(403).json({ message: "Forbidden: Invalid token" });
+    return res.status(403).send(false);
 });
 
 router.get(`/:token`, async (req, res) => {
@@ -142,7 +143,7 @@ router.patch(`/password-update`, async (req, res) => {
     }
 });
 
-app.get(`/:username`, async (req, res) => {
+router.get(`/:username`, async (req, res) => {
     const username = req.params.username;
 
     try {
