@@ -1,9 +1,9 @@
 export type userId = string;
 
 export enum userType {
-  Undefined,
-  Developer,
+  Developer = 0,
   Company,
+  Undefined,
 }
 
 export interface Identifiable<V> {
