@@ -1,4 +1,4 @@
-import Post from "./Post";
+import PostItem from "./PostItem";
 
 const PostsList = () => {
   // Dummy data for job posts
@@ -112,7 +112,7 @@ const PostsList = () => {
         {/* Job post cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {jobPosts.map((post, index) => (
-            <Post key={index} {...post} />
+            <PostItem key={index} {...post} />
           ))}
         </div>
       </div>
