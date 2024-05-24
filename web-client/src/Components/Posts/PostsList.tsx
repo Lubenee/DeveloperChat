@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import PostItem from "./PostItem";
+import { Post } from "../../types/posts/post-model";
 
 const PostsList = () => {
   // Dummy data for job posts
@@ -94,6 +96,10 @@ const PostsList = () => {
       date: "15 days ago",
     },
   ];
+
+  const jobPostss = useState<Post[]>([]);
+
+  useEffect(() => {}, []);
 
   return (
     <div className="py-8">
