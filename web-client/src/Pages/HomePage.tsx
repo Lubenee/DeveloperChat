@@ -1,13 +1,9 @@
-import { useEffect } from "react";
 import LeftSidebar from "../Components/Chat/LeftSidebar";
 import PostsList from "../Components/Posts/PostsList";
 import useValidUser from "../Hooks/useValidUser";
 
 const HomePage = () => {
   const { isUserLoggedIn } = useValidUser();
-  useEffect(() => {
-    console.log(isUserLoggedIn);
-  }, []);
 
   return (
     <>

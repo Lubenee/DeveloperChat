@@ -1,7 +1,14 @@
 //name, email, password, id,
 
 import { jwtToken, userType } from "../types/shared-types";
-import { REGISTER, LOGIN } from "../Constants/constants";
+import {
+  REGISTER,
+  LOGIN,
+  GET_USER_FROM_TOKEN,
+  UPDATE_USERNAME_EMAIL,
+  UPDATE_PASSWORD,
+  VERIFY_TOKEN,
+} from "../Constants/constants";
 import { UserCreateDto, userLoginData } from "../types/users/users-model";
 import { Developer } from "../types/users/dev-model";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
@@ -44,13 +51,16 @@ const useUsers = () => {
   // Verifies the token and returns all user info
   const getUserFromToken = async (token: string) => {
     try {
-      const res = await fetchData(`${baseUrl}/api/tusers/${token}`, {
-        method: "GET",
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetchData(
+        `${baseUrl}/${GET_USER_FROM_TOKEN}/${token}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return await res.json();
     } catch (err) {
       console.error("useUsers::getUserFromToken:", err);
@@ -63,7 +73,7 @@ const useUsers = () => {
   }) => {
     const token = localStorage.getItem(jwtToken);
     if (!token) throw new Error("Missing jwt token.");
-    await fetchData(`${baseUrl}/api/email-username-update`, {
+    await fetchData(`${baseUrl}/${UPDATE_USERNAME_EMAIL}`, {
       method: "PATCH",
       headers: {
         Authorization: token,
@@ -76,7 +86,7 @@ const useUsers = () => {
   const updatePassword = async (password: string) => {
     const token = localStorage.getItem(jwtToken);
     if (!token) throw new Error("Missing jwt token.");
-    await fetchData(`${baseUrl}/api/password-update`, {
+    await fetchData(`${baseUrl}/${UPDATE_PASSWORD}`, {
       method: "PATCH",
       headers: {
         Authorization: token,
@@ -94,7 +104,7 @@ const useUsers = () => {
   const verifyToken = async (token: string): Promise<boolean> => {
     if (!token) throw new Error("No token passed");
     try {
-      const res = await fetchData(`${baseUrl}/api/check-valid-token`, {
+      const res = await fetchData(`${baseUrl}/${VERIFY_TOKEN}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +112,8 @@ const useUsers = () => {
         },
       });
       // Should return true or false depending on whether the token is valid or not
-      return await res.json();
+      const valid = await res.json();
+      return valid;
     } catch (err) {
       console.error(err);
       throw err;
