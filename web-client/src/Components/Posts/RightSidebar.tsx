@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PrimaryButton } from "../Core/BrandButton";
 import BrandModal from "../Core/BrandModal";
+import CreatePostWizard from "./CreatePost";
+import { PostCreateDto } from "../../types/posts/post-model";
+import { usePosts } from "../../Hooks/usePosts";
+import CustomError from "../Core/CustomError";
 
 const RightSidebar = () => {
   const [createPostModal, setCreatePostModal] = useState(false);
+  const [step, setStep] = useState(1);
+  const [disableSubmit, setDisableSubmit] = useState(true);
+  const [newPost, setNewPost] = useState<PostCreateDto | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { createPost } = usePosts();
+
+  useEffect(() => {
+    setDisableSubmit(step === 4 ? false : true);
+  }, [step]);
 
   const onCloseModal = () => {
+    setStep(1);
     setCreatePostModal(false);
   };
 
-  const handlePost = () => {
-    setCreatePostModal(false);
+  const handlePost = async () => {
+    onCloseModal();
+    try {
+      if (newPost) await createPost(newPost);
+    } catch (err) {
+      setError(err as string);
+      console.error(err);
+    }
   };
 
   return (
@@ -23,13 +43,21 @@ const RightSidebar = () => {
         <PrimaryButton onClick={() => setCreatePostModal(true)}>
           Create new post
         </PrimaryButton>
+        {error && (
+          <CustomError message="Failed to create post" reason={error} />
+        )}
         <BrandModal
           isOpen={createPostModal}
           onClose={onCloseModal}
           title="Create new post"
           onSubmit={handlePost}
+          disableSubmit={disableSubmit}
           submitButtonText="Post">
-          <p>Create a new post wizard.</p>
+          <CreatePostWizard
+            setNewPost={setNewPost}
+            step={step}
+            setStep={setStep}
+          />
         </BrandModal>
       </div>
       <div className="flex items-center justify-center h-16 border-b border-gray-800">
