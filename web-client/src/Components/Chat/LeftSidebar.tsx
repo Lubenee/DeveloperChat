@@ -33,10 +33,11 @@ const mockChats = [
 const LeftSidebar = () => {
   return (
     <div
-      className="fixed left-0 top-0 h-full bg-gray-900   text-white w-64 overflow-y-auto"
+      className="fixed left-0 top-16 h-full bg-gray-900 text-white w-64 overflow-y-auto"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-800">
+      <div className="flex items-center justify-center h-16 px-4 border-b border-gray-800">
         <h1 className="text-lg font-bold">Chats</h1>
+        <br />
       </div>
       <div
         className="overflow-y-auto"

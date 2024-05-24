@@ -1,6 +1,6 @@
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-500 to-blue-600 flex flex-col items-center justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-purple-500 to-blue-600 flex flex-col items-center justify-center py-12 sm:px-6 lg:px-8 cursor-help">
       <div className="max-w-3xl w-full space-y-8 p-8 bg-white shadow-lg rounded-lg">
         <h2 className="text-3xl font-extrabold text-gray-900 text-center">
           About Us
