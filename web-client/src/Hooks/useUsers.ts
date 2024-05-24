@@ -11,6 +11,7 @@ import {
 } from "../Constants/constants";
 import { UserCreateDto, userLoginData } from "../types/users/users-model";
 import { Developer } from "../types/users/dev-model";
+import { fetchData } from "../utils/fetchUtils";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 
 export interface jwtTokenInterface {
@@ -118,16 +119,6 @@ const useUsers = () => {
       console.error(err);
       throw err;
     }
-  };
-
-  const fetchData = async (uri: string, options?: RequestInit) => {
-    const response = await fetch(uri, options);
-    if (!response.ok) {
-      const err = await response.text();
-      console.error("From Fetch Data: ", err);
-      throw err;
-    }
-    return response;
   };
 
   return {
