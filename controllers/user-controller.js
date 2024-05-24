@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 });
 
 // Register endpoint, returns a message and a status
-router.post("/register", async (req, res) => {
+router.post(`/register`, async (req, res) => {
     try {
         const { name, email, password, type } = req.body;
 
@@ -61,7 +61,7 @@ router.post(`/login`, async (req, res) => {
 
     try {
         //.first(): This limits the result to the first matching record and returns it.
-        const userLogin = await postgres("login").where({ email }).first();
+        const userLogin = await postgres("login").where({ email: email.toLowerCase() }).first();
 
         if (!userLogin || !bcrypt.compareSync(password, userLogin.hash))
             res.status(400).send("Invalid email or password.");
