@@ -64,7 +64,7 @@ router.post(`/login`, async (req, res) => {
         const userLogin = await postgres("login").where({ email: email.toLowerCase() }).first();
 
         if (!userLogin || !bcrypt.compareSync(password, userLogin.hash))
-            res.status(400).send("Invalid email or password.");
+            return res.status(400).send("Invalid email or password.");
 
         const user = await postgres("users").where({ id: userLogin.user_id });
         const token = jwt.sign(
