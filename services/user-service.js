@@ -1,6 +1,7 @@
 // models/userModel.js
 const postgres = require('../postgres');
 const jwt = require('jsonwebtoken')
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const getAllUsers = async () => {
     try {
@@ -16,10 +17,11 @@ const verifyToken = (token) => {
     if (!token) return false;
     try {
         jwt.verify(token, JWT_SECRET);
+        return true;
     } catch (error) {
+        console.log(error);
         return false;
     }
-    return true;
 };
 
 module.exports = {
