@@ -84,7 +84,7 @@ router.get(`/check-valid-token`, (req, res) => {
 
 router.get(`/:token`, async (req, res) => {
     const token = req.headers.authorization;
-    if (!validToken(token))
+    if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
     const user = await postgres('users').where({ id: decoded.id });
@@ -95,7 +95,7 @@ router.get(`/:token`, async (req, res) => {
 router.patch(`/email-username-update`, async (req, res) => {
     const { email, username } = req.body;
     const token = req.headers.authorization;
-    if (!validToken(token))
+    if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
 
