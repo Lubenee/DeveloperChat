@@ -7,6 +7,7 @@ interface ModalProps {
   title: string;
   onSubmit: () => void;
   submitButtonText: string;
+  disableSubmit?: boolean;
   children: ReactNode;
 }
 
@@ -16,6 +17,7 @@ const BrandModal = ({
   title,
   onSubmit,
   submitButtonText,
+  disableSubmit = false,
   children,
 }: ModalProps) => {
   return (
@@ -48,7 +50,10 @@ const BrandModal = ({
           </div>
           <div className="flex flex-row-reverse py-4 px-4">
             <div className="ml-4">
-              <PrimaryButton type="button" onClick={onSubmit}>
+              <PrimaryButton
+                type="button"
+                onClick={onSubmit}
+                disabled={disableSubmit}>
                 {submitButtonText}
               </PrimaryButton>
             </div>

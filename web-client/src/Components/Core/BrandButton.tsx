@@ -11,14 +11,29 @@ interface LoadingIndicatorButtonProps {
 interface ButtonProps {
   onClick?: () => void;
   children: ReactNode;
+  disabled?: boolean;
+  type?: ButtonType;
   [key: string]: any;
 }
 
-export const PrimaryButton = ({ children, onClick, ...props }: ButtonProps) => {
+export const PrimaryButton = ({
+  children,
+  onClick,
+  type,
+  disabled = false,
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      className={`bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline
+                  ${
+                    disabled
+                      ? `cursor-not-allowed bg-gray-300 text-gray-500`
+                      : ""
+                  }`}
       onClick={onClick}
+      disabled={disabled}
+      type={type}
       {...props}>
       {children}
     </button>
@@ -32,7 +47,7 @@ export const SecondaryButton = ({
 }: ButtonProps) => {
   return (
     <button
-      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
       onClick={onClick}
       {...props}>
       {children}
