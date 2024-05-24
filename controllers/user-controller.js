@@ -1,12 +1,15 @@
 const express = require("express");
-const router = express.Router();
-const jwt = require("jsonwebtoken");
-const { getAllUsers, verifyToken } = require("../services/user-service");
-const JWT_SECRET = process.env.JWT_SECRET;
-const SALT = process.env.BCRYPT_SALT;
 const bcrypt = require("bcrypt");
 const postgres = require("../postgres");
 const jwtDecode = require("jwt-decode");
+const jwt = require("jsonwebtoken");
+
+const SALT = parseInt(process.env.BCRYPT_SALT)
+const JWT_SECRET = process.env.JWT_SECRET;
+
+const router = express.Router();
+
+const { getAllUsers, verifyToken } = require("../services/user-service");
 
 // Login endpoint, returns a JWT token
 // JWT SIGNATURE:
@@ -27,7 +30,7 @@ router.post("/register", async (req, res) => {
         const { name, email, password, type } = req.body;
 
         //todo - use dotenv variable
-        const salt = bcrypt.genSaltSync(10);
+        const salt = bcrypt.genSaltSync(SALT);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const insertedUsers = await postgres("users")
@@ -89,7 +92,6 @@ router.get(`/:token`, async (req, res) => {
     if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
-    console.log(decoded);
     const user = await postgres('users').where({ id: decoded.id });
     if (!user) return res.status(404).json({ message: "User not found." });
     return res.status(200).json(user);
@@ -123,7 +125,7 @@ router.patch(`/email-username-update`, async (req, res) => {
 
 router.patch(`/password-update`, async (req, res) => {
     const token = req.headers.authorization;
-    if (!validToken(token))
+    if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
 
@@ -133,7 +135,7 @@ router.patch(`/password-update`, async (req, res) => {
         const user = await postgres('login').where({ user_id: decoded.id }).first();
         if (!user) return res.status(404).send('User not found.');
 
-        const hashedPassword = bcrypt.hashSync(password, BCRYPT_SALT);
+        const hashedPassword = bcrypt.hashSync(password, SALT);
 
         await postgres('login')
             .where({ user_id: decoded.id })

@@ -27,7 +27,6 @@ const ChatUser = ({ chat }: Props) => {
         y: e.clientY - rect.top - 45,
       });
     }
-    console.log(cursorPosition.x, cursorPosition.y, showText);
   };
 
   return (
