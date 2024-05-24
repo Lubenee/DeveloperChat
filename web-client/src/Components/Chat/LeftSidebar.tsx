@@ -42,7 +42,7 @@ const LeftSidebar = () => {
         className="overflow-y-auto"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
         {mockChats.map((chat) => (
-          <ChatUser chat={chat} />
+          <ChatUser key={chat.id} chat={chat} />
         ))}
       </div>
     </div>
