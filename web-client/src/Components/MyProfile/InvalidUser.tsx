@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import LoadingIndicatorButton from "../UI/LoadingIndicatorButton";
+import LoadingIndicatorButton from "../Core/BrandButton";
 import { useState } from "react";
 import { wait } from "../../utils/wait";
 

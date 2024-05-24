@@ -2,10 +2,11 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { UserCreateDto } from "../types/users/users-model";
 import useUsers from "../Hooks/useUsers";
 import { userType } from "../types/shared-types";
-import CustomError from "../Components/UI/CustomError";
+import CustomError from "../Components/Core/CustomError";
 import { useNavigate } from "react-router-dom";
 import { wait } from "../utils/wait";
-import LoadingIndicatorButton from "../Components/UI/LoadingIndicatorButton";
+import LoadingIndicatorButton from "../Components/Core/BrandButton";
+import { BrandInput } from "../Components/Core/BrandInput";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
@@ -113,14 +114,14 @@ const RegisterPage = () => {
                 className="block text-sm font-medium text-gray-700">
                 Username
               </label>
-              <input
+              <BrandInput
                 id="username"
                 name="username"
                 type="text"
                 autoComplete="username"
                 required
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                setValue={setUsername}
                 className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
@@ -131,14 +132,14 @@ const RegisterPage = () => {
                 className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
-              <input
+              <BrandInput
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                setValue={setEmail}
                 className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
@@ -149,14 +150,14 @@ const RegisterPage = () => {
                 className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <input
+              <BrandInput
                 id="password"
                 name="password"
                 type="password"
                 autoComplete="new-password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                setValue={setPassword}
                 className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
@@ -167,14 +168,14 @@ const RegisterPage = () => {
                 className="block text-sm font-medium text-gray-700">
                 Confirm password
               </label>
-              <input
+              <BrandInput
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 autoComplete="new-password"
                 required
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                setValue={setConfirmPassword}
                 className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
               />
             </div>
@@ -194,14 +195,14 @@ const RegisterPage = () => {
                   className="block text-sm font-medium text-gray-700">
                   Website
                 </label>
-                <input
+                <BrandInput
                   id="website"
                   name="website"
                   type="text"
                   autoComplete="website"
                   required
                   value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
+                  setValue={setWebsite}
                   className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
                 />
               </div>
@@ -211,14 +212,14 @@ const RegisterPage = () => {
                   className="block text-sm font-medium text-gray-700">
                   Industry
                 </label>
-                <input
+                <BrandInput
                   id="industry"
                   name="industry"
                   type="text"
                   autoComplete="industry"
                   required
                   value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
+                  setValue={setIndustry}
                   className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
                 />
               </div>
@@ -228,14 +229,14 @@ const RegisterPage = () => {
                   className="block text-sm font-medium text-gray-700">
                   Location/Address
                 </label>
-                <input
+                <BrandInput
                   id="address"
                   name="address"
                   type="text"
                   autoComplete="address"
                   required
                   value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  setValue={setAddress}
                   className="mt-1 p-2 border border-gray-300 block w-full shadow-sm sm:text-sm rounded-md"
                 />
               </div>

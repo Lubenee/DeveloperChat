@@ -1,24 +1,30 @@
 import { ReactNode } from "react";
 
 type ButtonType = "submit" | "reset" | "button" | undefined;
-interface Props {
+interface LoadingIndicatorButtonProps {
   loading: boolean;
   children: ReactNode;
   onClick?: () => void;
   type?: ButtonType;
 }
 
+interface ButtonProps {}
+
+export const PrimaryButton = () => {};
+
+export const SecondaryButton = () => {};
+
 const LoadingIndicatorButton = ({
   loading,
   onClick,
   children,
   type,
-}: Props) => {
+}: LoadingIndicatorButtonProps) => {
   return (
     <button
       type={type}
       className={`relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
-        loading ? "opacity-80 cursor-not-allowed" : ""
+        loading ? "opacity-80 cursor: wait" : ""
       }`}
       onClick={onClick}
       disabled={loading}

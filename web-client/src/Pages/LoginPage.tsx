@@ -2,10 +2,10 @@ import { FormEvent, useState } from "react";
 import { userLoginData } from "../types/users/users-model";
 import { useNavigate } from "react-router-dom";
 import useUsers from "../Hooks/useUsers";
-import CustomError from "../Components/UI/CustomError";
+import CustomError from "../Components/Core/CustomError";
 import { setTokenAndDispatchEvent } from "../utils/jwtTokenUtils";
 import { wait } from "../utils/wait";
-import LoadingIndicatorButton from "../Components/UI/LoadingIndicatorButton";
+import LoadingIndicatorButton from "../Components/Core/BrandButton";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

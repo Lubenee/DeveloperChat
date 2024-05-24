@@ -1,8 +1,9 @@
 import { FormEvent, useState } from "react";
-import CustomError from "../UI/CustomError";
-import Success from "../UI/Success";
-import LoadingIndicatorButton from "../UI/LoadingIndicatorButton";
+import CustomError from "../Core/CustomError";
+import Success from "../Core/Success";
+import LoadingIndicatorButton from "../Core/BrandButton";
 import { wait } from "../../utils/wait";
+import { BrandInput } from "../Core/BrandInput";
 
 interface Props {
   username: string;
@@ -82,12 +83,11 @@ const ChangeData = ({
                 className="visually-hidden block text-gray-700 font-bold mb-2">
                 Username
               </label>
-              <input
+              <BrandInput
                 type="text"
                 id="username"
                 value={username}
-                onChange={(ev) => setUsername(ev.target.value)}
-                className="visually-hidden w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+                setValue={setUsername}
               />
             </div>
             <div className="mb-6">
@@ -96,12 +96,11 @@ const ChangeData = ({
                 className="block text-gray-700 font-bold mb-2">
                 Email
               </label>
-              <input
+              <BrandInput
                 type="email"
                 id="email"
                 value={email}
-                onChange={(ev) => setEmail(ev.target.value)}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+                setValue={setEmail}
               />
             </div>
             {nameEmailError && (
@@ -138,13 +137,12 @@ const ChangeData = ({
                 className="block text-gray-700 font-bold mb-2">
                 New Password
               </label>
-              <input
+              <BrandInput
                 type="password"
                 autoComplete="new-password"
                 id="new-password"
                 value={newPassword}
-                onChange={(ev) => setNewPassword(ev.target.value)}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
+                setValue={setNewPassword}
               />
             </div>
             <div className="mb-6">
@@ -153,12 +151,12 @@ const ChangeData = ({
                 className="block text-gray-700 font-bold mb-2">
                 Confirm Password
               </label>
-              <input
+              <BrandInput
                 type="password"
                 id="confirm-password"
                 autoComplete="confirm-password"
                 value={confirmPassword}
-                onChange={(ev) => setConfirmPassword(ev.target.value)}
+                setValue={setConfirmPassword}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
               />
             </div>
