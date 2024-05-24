@@ -6,7 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const SALT = process.env.BCRYPT_SALT;
 const bcrypt = require("bcrypt");
 const postgres = require("../postgres");
-const { default: jwtDecode } = require("jwt-decode");
+const jwtDecode = require("jwt-decode");
 
 // Login endpoint, returns a JWT token
 // JWT SIGNATURE:
@@ -62,8 +62,10 @@ router.post(`/login`, async (req, res) => {
 
         if (!userLogin || !bcrypt.compareSync(password, userLogin.hash))
             res.status(400).send("Invalid email or password.");
+
+        const user = await postgres("users").where({ id: userLogin.user_id });
         const token = jwt.sign(
-            { id: userLogin.id, email: userLogin.email, name: userLogin.name },
+            { id: user[0].id, email: user[0].email, name: user[0].name },
             JWT_SECRET,
             {
                 expiresIn: "1h",
@@ -87,6 +89,7 @@ router.get(`/:token`, async (req, res) => {
     if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
+    console.log(decoded);
     const user = await postgres('users').where({ id: decoded.id });
     if (!user) return res.status(404).json({ message: "User not found." });
     return res.status(200).json(user);
