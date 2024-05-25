@@ -23,7 +23,7 @@ const upload = multer({ storage });
 
 router.get("/", async (req, res) => {
     const posts = await getAllPosts();
-    res.status(200).json({ posts });
+    res.status(200).send(posts);
 })
 
 router.post("/create", upload.single('image'), async (req, res) => {
