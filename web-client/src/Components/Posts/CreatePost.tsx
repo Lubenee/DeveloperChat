@@ -8,6 +8,7 @@ interface StepProps {
   onNextStep?: () => void;
   onPreviousStep?: () => void;
   onSubmit?: () => void;
+  disablePostButton?: (newVal: boolean) => void;
 }
 
 const Step1 = ({ formData, setFormData, onNextStep }: StepProps) => {
@@ -110,7 +111,7 @@ const Step3 = ({
   formData,
   setFormData,
   onPreviousStep,
-  onNextStep,
+  disablePostButton,
 }: StepProps) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -121,37 +122,39 @@ const Step3 = ({
     const file = event.target.files && event.target.files[0]; // Get the first selected file
     if (file) {
       // Process the selected file (e.g., upload to server, display preview, etc.)
-      // Here, you can update the form data with the selected image file
       setFormData({ ...formData, image: file });
     }
   };
 
-  const [disableNext, setDisableNext] = useState(true);
-
   useEffect(() => {
-    if (formData.location == "" || formData.image == null) setDisableNext(true);
-    else setDisableNext(false);
+    if (formData.location == "" || formData.image == null)
+      disablePostButton(true);
+    else disablePostButton(false);
   }, [formData.location, formData.image]);
 
   return (
     <div className="shadow-md bg-white rounded px-8 pt-6 pb-8 mb-4  flex justify-start flex-col">
-      <h2>Step 3: Specify Location and Set Company Image</h2>
-      <input
-        type="text"
-        name="location"
-        value={formData.location}
-        onChange={handleChange}
-        placeholder="Enter location"
-        required
-        className="mt-4 mb-2 p-2  rounded"
-      />
-      <input
-        type="file" // Change the type to "file"
-        name="image"
-        onChange={handleImageChange} // Define a new handler for image change
-        accept="image/*" // Specify accepted file types (in this case, any image type)
-        className="mt-2 mb-4 p-2 rounded"
-      />
+      <h2 className="text-xl font-semibold mb-4">
+        Step 3: Specify Location and Set Company Image
+      </h2>
+      <form encType="multipart/form-data" method="post">
+        <input
+          type="text"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          placeholder="Enter location"
+          required
+          className="mt-4 mb-2 p-2  rounded"
+        />
+        <input
+          type="file" // Change the type to "file"
+          name="image"
+          onChange={handleImageChange} // Define a new handler for image change
+          accept="image/*" // Spe cify accepted file types (in this case, any image type)
+          className="mt-2 mb-4 p-2 rounded"
+        />
+      </form>
       {formData.image && (
         <img
           className="h-auto w-128 mb-2"
@@ -162,37 +165,23 @@ const Step3 = ({
 
       <div className="flex items-center justify-between">
         <SecondaryButton onClick={onPreviousStep}>Previous</SecondaryButton>
-        <PrimaryButton
-          type="button"
-          onClick={onNextStep}
-          disabled={disableNext}>
-          Next
-        </PrimaryButton>
       </div>
     </div>
   );
 };
-
-interface FinalProps {
-  onPreviousStep: () => void;
-}
-
-const FinalStep = ({ onPreviousStep }: FinalProps) => {
-  return (
-    <div className="flex justify-center flex-col">
-      Thank you
-      <PrimaryButton onClick={onPreviousStep}>Previous</PrimaryButton>
-    </div>
-  );
-};
-
 interface Props {
   step: number;
   setStep: (newStep: number) => void;
   setNewPost: (newPost: PostCreateDto) => void;
+  disablePostButton: (newVal: boolean) => void;
 }
 
-const CreatePostWizard = ({ step, setStep, setNewPost }: Props) => {
+const CreatePostWizard = ({
+  step,
+  setStep,
+  setNewPost,
+  disablePostButton,
+}: Props) => {
   const [formData, setFormData] = useState<PostCreateDto>({
     title: "",
     description: "",
@@ -234,9 +223,9 @@ const CreatePostWizard = ({ step, setStep, setNewPost }: Props) => {
           setFormData={setFormData}
           onPreviousStep={handlePreviousStep}
           onNextStep={handleNextStep}
+          disablePostButton={disablePostButton}
         />
       )}
-      {step === 4 && <FinalStep onPreviousStep={handlePreviousStep} />}
     </div>
   );
 };
