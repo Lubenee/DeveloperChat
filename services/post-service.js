@@ -1,5 +1,4 @@
 const postgres = require('../postgres');
-const { post } = require('../routers');
 
 const getAllPosts = async () => {
     try {
