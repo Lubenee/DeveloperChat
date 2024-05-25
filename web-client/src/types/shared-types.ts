@@ -1,4 +1,5 @@
 export type userId = string;
+export type postId = string;
 
 export enum userType {
   Developer = 0,
