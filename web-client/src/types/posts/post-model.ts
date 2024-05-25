@@ -1,4 +1,4 @@
-import { postId } from "../shared-types";
+import { postId, userId } from "../shared-types";
 
 export interface PostCreateDto {
   title: string;
@@ -16,8 +16,9 @@ export class Post {
     public company: string,
     public date: Date,
     public location: string,
-    public image: string,
+    public image_url: string,
     public id: postId,
+    public userId: userId,
     public fullTime?: boolean,
     public payment?: number,
     public requirements?: string[],

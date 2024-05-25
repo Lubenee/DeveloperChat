@@ -127,6 +127,7 @@ const Step3 = ({
   };
 
   useEffect(() => {
+    if (!disablePostButton) return;
     if (formData.location == "" || formData.image == null)
       disablePostButton(true);
     else disablePostButton(false);
