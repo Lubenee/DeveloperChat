@@ -12,6 +12,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api', routers);
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static('/uploads'));
 
 app.listen(PORT, () => {
   console.log(`DeveloperChat server is running on port ${PORT}`);
