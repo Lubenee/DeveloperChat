@@ -9,6 +9,7 @@ interface StepProps {
   onPreviousStep?: () => void;
   onSubmit?: () => void;
   disablePostButton?: (newVal: boolean) => void;
+  setNewPost?: (newVal: PostCreateDto) => void;
 }
 
 const Step1 = ({ formData, setFormData, onNextStep }: StepProps) => {
@@ -112,6 +113,7 @@ const Step3 = ({
   setFormData,
   onPreviousStep,
   disablePostButton,
+  setNewPost,
 }: StepProps) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -127,10 +129,11 @@ const Step3 = ({
   };
 
   useEffect(() => {
-    if (!disablePostButton) return;
-    if (formData.location == "" || formData.image == null)
+    if (!disablePostButton || !setNewPost) return;
+    if (formData.location == "" || formData.image == null) {
       disablePostButton(true);
-    else disablePostButton(false);
+      setNewPost(formData);
+    } else disablePostButton(false);
   }, [formData.location, formData.image]);
 
   return (
@@ -225,6 +228,7 @@ const CreatePostWizard = ({
           onPreviousStep={handlePreviousStep}
           onNextStep={handleNextStep}
           disablePostButton={disablePostButton}
+          setNewPost={setNewPost}
         />
       )}
     </div>
