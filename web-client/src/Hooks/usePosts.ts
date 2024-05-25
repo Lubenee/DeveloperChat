@@ -1,5 +1,5 @@
 import { CREATE_POST } from "../Constants/constants";
-import { PostCreateDto } from "../types/posts/post-model";
+import { Post, PostCreateDto } from "../types/posts/post-model";
 import { jwtToken } from "../types/shared-types";
 import { fetchData } from "../utils/fetchUtils";
 
@@ -16,9 +16,7 @@ export const usePosts = () => {
     formDataToSend.append("description", item.description);
     formDataToSend.append("company", item.company);
     formDataToSend.append("location", item.location);
-    if (item.image) {
-      formDataToSend.append("image", item.image);
-    }
+    if (item.image) formDataToSend.append("image", item.image);
 
     console.log(item.image);
     await fetchData(`${baseUrl}/${CREATE_POST}`, {
@@ -30,5 +28,10 @@ export const usePosts = () => {
     });
   };
 
-  return { createPost };
+  const getAllPosts = async () => {
+    const res = await fetchData(`${baseUrl}/api/post/`);
+    return (await res.json()) as Post[];
+  };
+
+  return { createPost, getAllPosts };
 };
