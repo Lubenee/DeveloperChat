@@ -88,6 +88,7 @@ const ChangeData = ({
                 id="username"
                 value={username}
                 setValue={setUsername}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div className="mb-6">
@@ -101,6 +102,7 @@ const ChangeData = ({
                 id="email"
                 value={email}
                 setValue={setEmail}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
               />
             </div>
             {nameEmailError && (
@@ -143,6 +145,7 @@ const ChangeData = ({
                 id="new-password"
                 value={newPassword}
                 setValue={setNewPassword}
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-indigo-500"
               />
             </div>
             <div className="mb-6">

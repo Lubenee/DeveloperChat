@@ -9,7 +9,7 @@ export const BrandInput = ({ value, setValue, ...props }: Props) => {
     <input
       value={value}
       onChange={(ev) => setValue(ev.target.value)}
-      className="w-full px-4 py-2 border rounded-md outline focus:border-indigo-500"
+      className="w-full px-4 py-2 border rounded-md focus:border-indigo-500"
       {...props}
     />
   );
