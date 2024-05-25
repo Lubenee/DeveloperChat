@@ -92,7 +92,7 @@ router.get(`/:token`, async (req, res) => {
     if (!verifyToken(token))
         return res.status(403).json({ message: "Forbidden: Invalid token" });
     const decoded = jwtDecode(token);
-    const user = await postgres('users').where({ id: decoded.id });
+    const user = await postgres('users').where({ id: decoded.id }).first();
     if (!user) return res.status(404).json({ message: "User not found." });
     return res.status(200).json(user);
 });
@@ -106,13 +106,18 @@ router.patch(`/email-username-update`, async (req, res) => {
 
     try {
 
-        const userToUpdate = await postgres('users').where({ id: decoded.id });
+        const userToUpdate = await postgres('users').where({ id: decoded.id }).first();
         if (!userToUpdate) return res.status(404).json("User not found.");
 
+        if (userToUpdate.email == email && userToUpdate.name == username)
+            return res.status(200).send("User already has those credentials.");
+
         //See if the email is available
-        const isEmailTaken = await postgres('users').where({ email });
-        if (isEmailTaken)
-            return res.status(403).send("Email already taken.");
+        if (email != userToUpdate.email) {
+            const isEmailTaken = await postgres('users').where({ email });
+            if (isEmailTaken)
+                return res.status(403).send("Email already taken.");
+        }
 
         await postgres('users').where({ id: decoded.id }).update({ name: username, email: email });
         return res.status(200).send("Updated successfully.");
