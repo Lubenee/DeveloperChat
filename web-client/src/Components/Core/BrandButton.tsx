@@ -23,16 +23,16 @@ export const PrimaryButton = ({
   disabled = false,
   ...props
 }: ButtonProps) => {
+  const buttonClassName = `font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ${
+    disabled
+      ? "cursor-not-allowed bg-gray-300 text-gray-400 hover:bg-gray-400 hover:text-gray-600"
+      : "bg-gray-700 hover:bg-gray-800 text-white"
+  }`;
   return (
     <button
-      className={`bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline
-                  ${
-                    disabled
-                      ? `cursor-not-allowed bg-gray-300 text-gray-500`
-                      : ""
-                  }`}
-      onClick={onClick}
+      className={buttonClassName}
       disabled={disabled}
+      onClick={onClick}
       type={type}
       {...props}>
       {children}

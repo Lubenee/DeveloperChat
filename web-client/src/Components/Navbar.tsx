@@ -65,9 +65,8 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
             className="flex items-centers hover:cursor-pointer"
             onClick={() => navigate(`/my-profile`)}>
             <div className="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-2 hover:duration-500 hover:scale-125">
-              {name?.charAt(0)}
+              {name?.charAt(0).toUpperCase()}
             </div>
-
             <button className="text-gray-400 hover:text-white text-center">
               View profile
             </button>

@@ -44,7 +44,9 @@ const RightSidebar = () => {
           Create new post
         </PrimaryButton>
         {error && (
-          <CustomError message="Failed to create post" reason={error} />
+          <div className="mt-2">
+            <CustomError message="Failed to create post" reason={error} />
+          </div>
         )}
         <BrandModal
           isOpen={createPostModal}
@@ -57,6 +59,7 @@ const RightSidebar = () => {
             setNewPost={setNewPost}
             step={step}
             setStep={setStep}
+            disablePostButton={setDisableSubmit}
           />
         </BrandModal>
       </div>
