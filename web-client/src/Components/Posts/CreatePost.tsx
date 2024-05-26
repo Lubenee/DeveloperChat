@@ -132,8 +132,10 @@ const Step3 = ({
     if (!disablePostButton || !setNewPost) return;
     if (formData.location == "" || formData.image == null) {
       disablePostButton(true);
+    } else {
+      disablePostButton(false);
       setNewPost(formData);
-    } else disablePostButton(false);
+    }
   }, [formData.location, formData.image]);
 
   return (
