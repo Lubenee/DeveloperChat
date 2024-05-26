@@ -5,6 +5,7 @@ import CreatePostWizard from "./CreatePost";
 import { PostCreateDto } from "../../types/posts/post-model";
 import { usePosts } from "../../Hooks/usePosts";
 import CustomError from "../Core/CustomError";
+import FilterSection from "./Filters/FilterSection";
 
 const RightSidebar = () => {
   const [createPostModal, setCreatePostModal] = useState(false);
@@ -65,8 +66,8 @@ const RightSidebar = () => {
       </div>
       <div className="flex items-center justify-center h-16 border-b border-gray-800">
         <h1 className="text-lg font-bold">Filters</h1>
-        <br />
       </div>
+      <FilterSection />
     </div>
   );
 };
