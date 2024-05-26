@@ -8,6 +8,7 @@ import TestPage from "../Pages/TestPage";
 import MyProfilePage from "../Pages/MyProfilePage";
 import NotFoundPage from "../Pages/NotFoundPage";
 import AboutPage from "../Pages/AboutPage";
+import ChatRoom from "../Components/Chat/ChatRoom";
 
 const AppRouter = () => {
   return (
@@ -21,6 +22,7 @@ const AppRouter = () => {
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/test" element={<TestPage />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/direct/:chatroomId" element={<ChatRoom />} />
     </Routes>
   );
 };
