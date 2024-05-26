@@ -26,7 +26,7 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
         <div
           className="flex items-center hover:cursor-pointer"
           onClick={() => navigate(`/`)}>
-          <span className="text-white text-lg font-bold">Logo</span>
+          <span className="text-white text-lg font-bold">DevChat</span>
         </div>
 
         <div className="flex items-center">
