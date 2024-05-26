@@ -1,5 +1,6 @@
 export type userId = string;
 export type postId = string;
+export type city = { label: string; value: string; available: number };
 
 export enum userType {
   Developer = 0,
