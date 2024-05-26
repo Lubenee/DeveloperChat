@@ -6,8 +6,14 @@ import { PostCreateDto } from "../../types/posts/post-model";
 import { usePosts } from "../../Hooks/usePosts";
 import CustomError from "../Core/CustomError";
 import FilterSection from "./Filters/FilterSection";
+import { city } from "../../types/shared-types";
 
-const RightSidebar = () => {
+interface Props {
+  availableCities: city[];
+  setCityFilter: (newVal: city) => void;
+}
+
+const RightSidebar = ({ ...props }: Props) => {
   const [createPostModal, setCreatePostModal] = useState(false);
   const [step, setStep] = useState(1);
   const [disableSubmit, setDisableSubmit] = useState(true);
@@ -67,7 +73,7 @@ const RightSidebar = () => {
       <div className="flex items-center justify-center h-16 border-b border-gray-800">
         <h1 className="text-lg font-bold">Filters</h1>
       </div>
-      <FilterSection />
+      <FilterSection {...props} />
     </div>
   );
 };

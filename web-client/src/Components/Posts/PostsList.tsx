@@ -1,51 +1,29 @@
 import { useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import { Post } from "../../types/posts/post-model";
-import { usePosts } from "../../Hooks/usePosts";
+import { city } from "../../types/shared-types";
 
 interface Props {
+  posts: Post[];
   searchFilter: string | null;
+  cityFilter: city | null;
 }
 
-const PostsList = ({ searchFilter }: Props) => {
-  // const jobPosts = [
-  //   {
-  //     title: "Business Analyst",
-  //     location: "Houston",
-  //     company: "Market Insights",
-  //     date: "12 days ago",
-  //   },
-  //   {
-  //     title: "Network Engineer",
-  //     location: "Atlanta",
-  //     company: "Network Innovations",
-  //     date: "13 days ago",
-  //   },
-  //   {
-  //     title: "AI Researcher",
-  //     location: "Palo Alto",
-  //     company: "AI Labs",
-  //     date: "14 days ago",
-  //   },
-  //   {
-  //     title: "QA Engineer",
-  //     location: "San Diego",
-  //     company: "Quality Assurance Co",
-  //     date: "15 days ago",
-  //   },
-  // ];
-
-  const [posts, setPosts] = useState<Post[]>([]);
+const PostsList = ({ posts, searchFilter, cityFilter }: Props) => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
-  const { getAllPosts } = usePosts();
 
   useEffect(() => {
-    const getPosts = async () => {
-      const res = await getAllPosts();
-      setPosts(res);
-    };
-    getPosts();
-  }, []);
+    if (!cityFilter || cityFilter.label == "All" || cityFilter.label == "all") {
+      setFilteredPosts(posts);
+      return;
+    }
+    const filter = posts.filter((post) => {
+      const filterToLower = cityFilter.value.toLowerCase();
+      const locationToLower = post.location.toLowerCase();
+      return locationToLower == filterToLower;
+    });
+    setFilteredPosts(filter);
+  }, [cityFilter, posts]);
 
   useEffect(() => {
     if (!searchFilter) {
@@ -55,7 +33,6 @@ const PostsList = ({ searchFilter }: Props) => {
     const searchFilterLowerCase = searchFilter.toLowerCase();
     const filter = posts.filter((post) => {
       const titleToLower = post.title.toLowerCase();
-
       return titleToLower.includes(searchFilterLowerCase);
     });
     setFilteredPosts(filter);
