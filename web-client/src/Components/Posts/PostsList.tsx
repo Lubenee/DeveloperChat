@@ -1,105 +1,65 @@
 import { useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import { Post } from "../../types/posts/post-model";
+import { usePosts } from "../../Hooks/usePosts";
 
-const PostsList = () => {
-  // Dummy data for job posts
-  const jobPosts = [
-    {
-      title: "Software Engineer",
-      location: "New York",
-      company: "Tech Co",
-      date: "2 days ago",
-    },
-    {
-      title: "Product Manager",
-      location: "San Francisco",
-      company: "Startup Inc",
-      date: "3 days ago",
-    },
-    {
-      title: "Data Scientist",
-      location: "Chicago",
-      company: "Data Corp",
-      date: "4 days ago",
-    },
-    {
-      title: "UX Designer",
-      location: "Los Angeles",
-      company: "Design Studio",
-      date: "5 days ago",
-    },
-    {
-      title: "Frontend Developer",
-      location: "Austin",
-      company: "Web Solutions",
-      date: "1 day ago",
-    },
-    {
-      title: "Backend Developer",
-      location: "Seattle",
-      company: "Cloud Services",
-      date: "6 days ago",
-    },
-    {
-      title: "Mobile Developer",
-      location: "Boston",
-      company: "App Creators",
-      date: "7 days ago",
-    },
-    {
-      title: "System Administrator",
-      location: "Denver",
-      company: "IT Support",
-      date: "8 days ago",
-    },
-    {
-      title: "DevOps Engineer",
-      location: "Miami",
-      company: "Deployments Inc",
-      date: "9 days ago",
-    },
-    {
-      title: "Cybersecurity Analyst",
-      location: "Washington DC",
-      company: "SecureTech",
-      date: "10 days ago",
-    },
-    {
-      title: "Project Manager",
-      location: "Philadelphia",
-      company: "Management Solutions",
-      date: "11 days ago",
-    },
-    {
-      title: "Business Analyst",
-      location: "Houston",
-      company: "Market Insights",
-      date: "12 days ago",
-    },
-    {
-      title: "Network Engineer",
-      location: "Atlanta",
-      company: "Network Innovations",
-      date: "13 days ago",
-    },
-    {
-      title: "AI Researcher",
-      location: "Palo Alto",
-      company: "AI Labs",
-      date: "14 days ago",
-    },
-    {
-      title: "QA Engineer",
-      location: "San Diego",
-      company: "Quality Assurance Co",
-      date: "15 days ago",
-    },
-  ];
+interface Props {
+  searchFilter: string | null;
+}
 
-  const jobPostss = useState<Post[]>([]);
+const PostsList = ({ searchFilter }: Props) => {
+  // const jobPosts = [
+  //   {
+  //     title: "Business Analyst",
+  //     location: "Houston",
+  //     company: "Market Insights",
+  //     date: "12 days ago",
+  //   },
+  //   {
+  //     title: "Network Engineer",
+  //     location: "Atlanta",
+  //     company: "Network Innovations",
+  //     date: "13 days ago",
+  //   },
+  //   {
+  //     title: "AI Researcher",
+  //     location: "Palo Alto",
+  //     company: "AI Labs",
+  //     date: "14 days ago",
+  //   },
+  //   {
+  //     title: "QA Engineer",
+  //     location: "San Diego",
+  //     company: "Quality Assurance Co",
+  //     date: "15 days ago",
+  //   },
+  // ];
 
-  useEffect(() => {}, []);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const { getAllPosts } = usePosts();
+
+  useEffect(() => {
+    const getPosts = async () => {
+      const res = await getAllPosts();
+      setPosts(res);
+    };
+    getPosts();
+  }, []);
+
+  useEffect(() => {
+    if (!searchFilter) {
+      setFilteredPosts(posts);
+      return;
+    }
+    const searchFilterLowerCase = searchFilter.toLowerCase();
+    const filter = posts.filter((post) => {
+      const titleToLower = post.title.toLowerCase();
+
+      return titleToLower.includes(searchFilterLowerCase);
+    });
+    setFilteredPosts(filter);
+  }, [searchFilter]);
 
   return (
     <div className="py-8">
@@ -111,14 +71,13 @@ const PostsList = () => {
             <h2 className="text-xl font-bold text-gray-800 mb-2">
               Job Type: Software Engineer
             </h2>
-            <p className="text-gray-700">Total Posts: {jobPosts.length}</p>
+            <p className="text-gray-700">Total Posts: {filteredPosts.length}</p>
           </div>
         </div>
 
-        {/* Job post cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {jobPosts.map((post, index) => (
-            <PostItem key={index} {...post} />
+          {filteredPosts.map((pst) => (
+            <PostItem key={pst.id} post={pst} />
           ))}
         </div>
       </div>
