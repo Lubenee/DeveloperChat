@@ -59,7 +59,7 @@ const PostsList = ({ searchFilter }: Props) => {
       return titleToLower.includes(searchFilterLowerCase);
     });
     setFilteredPosts(filter);
-  }, [searchFilter]);
+  }, [searchFilter, posts]);
 
   return (
     <div className="py-8">
