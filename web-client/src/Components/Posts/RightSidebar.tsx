@@ -7,6 +7,7 @@ import { usePosts } from "../../Hooks/usePosts";
 import CustomError from "../Core/CustomError";
 import FilterSection from "./Filters/FilterSection";
 import { city } from "../../types/shared-types";
+import useValidUser from "../../Hooks/useValidUser";
 
 interface Props {
   availableCities: city[];
@@ -19,6 +20,7 @@ const RightSidebar = ({ ...props }: Props) => {
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [newPost, setNewPost] = useState<PostCreateDto | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { isUserLoggedIn } = useValidUser();
   const { createPost } = usePosts();
 
   useEffect(() => {
@@ -47,7 +49,9 @@ const RightSidebar = ({ ...props }: Props) => {
         <br />
       </div>
       <div className="flex justify-centera mb-2 flex-col p-8">
-        <PrimaryButton onClick={() => setCreatePostModal(true)}>
+        <PrimaryButton
+          onClick={() => setCreatePostModal(true)}
+          disabled={!isUserLoggedIn}>
           Create new post
         </PrimaryButton>
         {error && (
