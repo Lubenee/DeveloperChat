@@ -64,13 +64,17 @@ const HomePage = () => {
   };
 
   return (
-    <>
+    <div
+      className="overflow-y-auto"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {isUserLoggedIn && <LeftSidebar />}
       <RightSidebar
         availableCities={availableCities}
         setCityFilter={setCityFilter}
       />
-      <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-b from-purple-500 to-blue-600">
+      <div
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="overflow-y-auto flex flex-col justify-center items-center min-h-screen bg-gradient-to-b from-purple-500 to-blue-600">
         <div className="text-white text-6xl font-bold mb-8 mt-16">
           Welcome to Developer Chat
         </div>
@@ -92,7 +96,7 @@ const HomePage = () => {
           posts={posts}
         />
       </div>
-    </>
+    </div>
   );
 };
 

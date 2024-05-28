@@ -22,7 +22,7 @@ const AppRouter = () => {
       <Route path="*" element={<NotFoundPage />} />
       <Route path="/test" element={<TestPage />} />
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/direct/:chatroomId" element={<ChatRoom />} />
+      <Route path="/direct/:chatId" element={<ChatRoom />} />
     </Routes>
   );
 };

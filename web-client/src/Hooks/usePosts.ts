@@ -18,7 +18,6 @@ export const usePosts = () => {
     formDataToSend.append("location", item.location);
     if (item.image) formDataToSend.append("image", item.image);
 
-    console.log(item.image);
     await fetchData(`${baseUrl}/${CREATE_POST}`, {
       method: "POST",
       headers: {

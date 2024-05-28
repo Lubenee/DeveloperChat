@@ -1,6 +1,6 @@
 //name, email, password, id,
 
-import { jwtToken, userType } from "../types/shared-types";
+import { jwtToken, userId, userType } from "../types/shared-types";
 import {
   REGISTER,
   LOGIN,
@@ -63,6 +63,14 @@ const useUsers = () => {
         }
       );
       return await res.json();
+    } catch (err) {
+      console.error("useUsers::getUserFromToken:", err);
+    }
+  };
+
+  const getUserFromId = async (id: userId) => {
+    try {
+      const res = await fetchData(`${baseUrl}/${GET_USER_FROM_TOKEN}/`);
     } catch (err) {
       console.error("useUsers::getUserFromToken:", err);
     }

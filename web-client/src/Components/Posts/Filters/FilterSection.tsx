@@ -28,8 +28,11 @@ const FilterSection = ({ availableCities, setCityFilter }: Props) => {
           selectedValue={selectedCity}
           onChange={handleCityChange}
         />
+        <hr />
       </div>
-      <div>Jobs with payment only</div>
+      <div className="text-center">
+        Jobs with payment only <br /> (Not Implemented)
+      </div>
     </div>
   );
 };

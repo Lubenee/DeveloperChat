@@ -3,6 +3,7 @@ import { Post } from "../../types/posts/post-model";
 import { formatDateToDDMMYYYY } from "../../utils/dateUtils";
 import BookmarkBorderOutlinedIcon from "@mui/icons-material/BookmarkBorderOutlined";
 import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
+import { useNavigate } from "react-router-dom";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 
 interface PostProps {
@@ -11,6 +12,7 @@ interface PostProps {
 
 const PostItem = ({ post }: PostProps) => {
   const [filled, setFilled] = useState(false);
+  const navigation = useNavigate();
 
   const handleBookmark = () => {
     setFilled((prevFilled) => !prevFilled);
@@ -18,7 +20,6 @@ const PostItem = ({ post }: PostProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-2xl hover:cursor-pointer hover:bg-gray-100">
-      {/* <div className="h-40 bg-gradient-to-br from-pink-500 to-purple-500 rounded-t-lg"></div> */}
       <img
         src={`${baseUrl}/uploads/${post.image_url}`}
         alt={`${post.title}`}
