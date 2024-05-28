@@ -69,9 +69,11 @@ const RadioButtonGroup = ({
 
   return (
     <div className="mb-4 border rounded-lg shadow-md p-1 min-w-48">
-      <div className="flex justify-between align-middle items-center ">
+      <div
+        className="flex justify-between align-middle items-center"
+        onClick={handleToggleCollapse}>
         <h3 className="font-semibold text-lg text-gray-300 mh-2">{title}</h3>
-        <button type="button" onClick={handleToggleCollapse} className=" mh-2">
+        <button type="button" className=" mh-2">
           {isCollapsed ? (
             <ExpandMoreIcon fontSize="small" />
           ) : (
