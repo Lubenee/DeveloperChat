@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { Chat } from "../../types/chat/chats-model";
+import defaultAvatar from "../../assets/PFP_DEFAULT.png";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   chat: Chat;
@@ -29,6 +31,9 @@ const ChatUser = ({ chat }: Props) => {
     }
   };
 
+  const avatar = chat.avatar ? chat.avatar : defaultAvatar;
+  const navigate = useNavigate();
+
   return (
     <div
       key={chat.id}
@@ -36,8 +41,12 @@ const ChatUser = ({ chat }: Props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
-      ref={containerRef}>
-      <div className="relative w-8 h-8 bg-gray-700 rounded-full focus:ring-2"></div>
+      ref={containerRef}
+      onClick={() => navigate(`/direct/${chat.id}`)}>
+      <img
+        className="relative w-8 h-8 bg-gray-700 rounded-full focus:ring-2"
+        src={avatar}
+      />
       <div className="ml-3">{chat.name}</div>
       {showText && (
         <span
