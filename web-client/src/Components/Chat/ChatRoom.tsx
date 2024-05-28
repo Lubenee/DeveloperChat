@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import LeftSidebar from "./LeftSidebar";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 import { io, Socket } from "socket.io-client";
 import { PrimaryButton } from "../Core/BrandButton";
-import { BrandInput } from "../Core/BrandInput";
+import Messages from "./Messages";
 
 const ChatRoom = () => {
   const [messages, setMessages] = useState<string[]>([]);
@@ -17,6 +17,7 @@ const ChatRoom = () => {
     // Connect to the Socket.IO server
     // Specify the connection options
     const newSocket: Socket = io(baseUrl);
+    console.log(chatroomId);
     setSocket(newSocket);
     newSocket.emit("joinRoom", chatroomId);
     return () => {
@@ -28,49 +29,48 @@ const ChatRoom = () => {
     if (!socket) return;
     socket.on("receiveMessage", (message) => {
       console.log("Received:", message);
-      setMessages((prevMessages) => [...prevMessages, message.messageInput]);
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
     return () => {
       socket.off("message");
     };
   }, [socket]);
 
-  const sendMessage = () => {
+  const sendMessage = (ev: FormEvent) => {
+    ev.preventDefault();
     if (!messageInput.trim()) return;
-    console.log("Sent", messageInput);
-    // Emit the message to the server
+    console.log("sending", { message: messageInput, room: chatroomId });
     if (socket) {
-      socket.emit("sendMessage", { messageInput, chatroomId });
+      socket.emit("sendMessage", { message: messageInput, room: chatroomId });
     }
 
-    // Clear the input field
     setMessageInput("");
   };
 
   return (
     <>
       <LeftSidebar />
-      <div className="flex flex-col h-full ml-64 justify-end">
-        <div className="bg-gray-800 py-3 px-4 text-white">
-          <h2 className="text-xl font-bold">users.join(' & ')</h2>
+      <div className="flex flex-col h-screen ml-64">
+        {/* <div className="bg-gray-800 py-3 px-4 text-white">
+      <h2 className="text-xl font-bold">users.join(' & ')</h2>
+    </div> */}
+        <div className="flex-grow overflow-y-auto">
+          <Messages messages={messages} />
         </div>
-        <div className="flex-1 bg-gray-300 p-4 overflow-y-auto">
-          {messages.map((message, index) => (
-            <div key={index} className="mb-2">
-              <div className="bg-white p-2 rounded-md">{message}</div>
-            </div>
-          ))}
-        </div>
-        <div className="bg-gray-200 p-4 flex">
-          <BrandInput
-            type="text"
-            value={messageInput}
-            setValue={setMessageInput}
-            className="flex-1 bg-white px-4 py-2 rounded-md mr-4"
-            placeholder="Type a message..."
-          />
-          <PrimaryButton onClick={sendMessage}>Send</PrimaryButton>
-        </div>
+        <form
+          onSubmit={sendMessage}
+          className="bg-gray-200 p-4 sticky bottom-0 w-full">
+          <div className="flex">
+            <input
+              type="text"
+              value={messageInput}
+              onChange={(ev) => setMessageInput(ev.target.value)}
+              className="flex-1 bg-white px-4 py-2 rounded-md"
+              placeholder="Type a message..."
+            />
+            <PrimaryButton type="submit">Send</PrimaryButton>
+          </div>
+        </form>
       </div>
     </>
   );
