@@ -1,4 +1,4 @@
-import { userId, userType } from "../shared-types";
+import { avatar, userId, userType } from "../shared-types";
 
 //Data Transfer Object
 export interface UserCreateDto {
@@ -14,5 +14,10 @@ export interface userLoginData {
 }
 
 export class User {
-  constructor(public name: string, public email: string, public id: userId) {}
+  constructor(
+    public name: string,
+    public email: string,
+    public id: userId,
+    public avatar: avatar = null
+  ) {}
 }
