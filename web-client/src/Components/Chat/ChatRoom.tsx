@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import LeftSidebar from "./LeftSidebar";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 import { io, Socket } from "socket.io-client";
 import Messages from "./Messages";
@@ -90,6 +90,13 @@ const ChatRoom = () => {
     socket.on("receiveMessage", (message) => {
       console.log("Received:", message);
       setMessages((prevMessages) => [...prevMessages, message]);
+      setTimeout(() => {
+        // window.scrollTo(0, document.documentElement.scrollHeight);
+
+        const scrollElement = document.documentElement;
+        const scrollToPosition = scrollElement.scrollHeight;
+        scrollElement.scrollTo({ top: scrollToPosition, behavior: "smooth" });
+      }, 150); // Adjust the delay as needed
     });
     return () => {
       socket.off("message");
@@ -142,12 +149,14 @@ const ChatRoom = () => {
   // const handleImageClick = () => {};
 
   return (
-    <div className="">
+    <div>
       {isUserLoggedIn ? (
         <>
           <LeftSidebar />
           <div className=" ml-64">
-            <Messages messages={messages} currentUser={currentUser} />
+            <div className="messages-container h-screen-3/4">
+              <Messages messages={messages} currentUser={currentUser} />
+            </div>
 
             <div className="p-4 w-full flex flex-row bg-white sticky bottom-0">
               <form onSubmit={sendMessage} className="flex w-full">
