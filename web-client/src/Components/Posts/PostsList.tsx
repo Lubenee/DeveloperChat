@@ -39,7 +39,7 @@ const PostsList = ({ posts, searchFilter, cityFilter }: Props) => {
   }, [searchFilter, posts]);
 
   return (
-    <div className="py-8">
+    <div className="py-8 ">
       <div className="max-w-6xl mx-auto px-4">
         {/* Informational card */}
         <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg mb-8">

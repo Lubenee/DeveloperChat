@@ -7,6 +7,11 @@ export default {
         "4xl":
           "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
       },
+      colors: {
+        'purple-700': '#6B46C1', // Custom purple color
+        'blue-200': '#EBF8FF', // Custom blue color
+      },
+
       margin: {
         '1': '0.25rem',
         '2': '0.5rem',
@@ -22,7 +27,11 @@ export default {
         '24': '6rem',
         '32': '8rem',
       },
+      scrollbar: ['rounded'],
     },
+  },
+  variants: {
+    scrollbar: ['rounded'],
   },
   plugins: [
     function ({ addUtilities, theme, e }) {
@@ -34,6 +43,30 @@ export default {
       }, {});
 
       addUtilities(utilities, ['responsive', 'hover']);
-    }
+    },
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.scrollbar-thin': {
+          'scrollbar-width': 'thin',
+        },
+        '.scrollbar-thumb-purple-700': {
+          'scrollbar-color': '#6B46C1 #EBF8FF',
+        },
+        '.scrollbar-track-blue-200': {
+          'background': '#EBF8FF',
+        },
+        '.scrollbar-thumb': {
+          'scrollbar-color': '#888 #f1f1f1',
+        },
+        '.scrollbar-thumb:hover': {
+          'scrollbar-color': '#555 #f1f1f1',
+        },
+        '.scrollbar-track': {
+          'background': '#f1f1f1',
+        },
+      }
+
+      addUtilities(newUtilities, ['responsive', 'hover'])
+    },
   ],
 };

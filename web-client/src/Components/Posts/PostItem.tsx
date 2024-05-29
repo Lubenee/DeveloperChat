@@ -23,11 +23,11 @@ const PostItem = ({ post }: PostProps) => {
       <img
         src={`${baseUrl}/uploads/${post.image_url}`}
         alt={`${post.title}`}
-        className="overflow-hidden rounded-lg h-40 w-64"
+        className="rounded-lg h-40 w-64"
       />
       <hr />
       <div className="p-4">
-        <div className="flex justify-between flex-row align-middle">
+        <div className="flex justify-between flex-row">
           <h2 className="text-lg font-bold text-gray-800 mb-2">{post.title}</h2>
           {filled ? (
             <BookmarkOutlinedIcon

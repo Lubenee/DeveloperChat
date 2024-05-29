@@ -8,10 +8,13 @@ const App = () => {
 
   return (
     <Router>
-      {/* This margin is the navbar's height */}
-      <div className="mt-16">
-        <Navbar isUserLoggedIn={isUserLoggedIn} />
-        <AppRouter />
+      <div className="h-screen flex flex-col">
+        <div className="fixed w-full top-0">
+          <Navbar isUserLoggedIn={isUserLoggedIn} />
+        </div>
+        <div className="mt-16 ">
+          <AppRouter />
+        </div>
       </div>
     </Router>
   );

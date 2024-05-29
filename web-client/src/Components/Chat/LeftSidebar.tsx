@@ -19,7 +19,6 @@ const LeftSidebar = () => {
       const token = localStorage.getItem(jwtToken);
       const decode = jwtDecode(token) as jwtTokenInterface;
 
-      console.log(res);
       if (!res) return;
       res.forEach((chat: any) => {
         _chats.push({
