@@ -25,29 +25,33 @@ router.post('/', async (req, res) => {
             .where('chats.user1_id', decoded.id)
             .orWhere('chats.user2_id', decoded.id);
 
-        console.log(chats);
         return res.status(200).send(chats);
     }
     catch (err) {
-        console.log("Server Error", err);
+        console.error("Server Error", err);
         throw err;
     }
 })
 
 router.post('/get-chat', async (req, res) => {
-    const token = req.headers.authorization;
-    if (!verifyToken(token))
-        return res.status(403).send("Session expired. Please log in again.");
+    // const token = req.headers.authorization;
+    // if (!verifyToken(token))
+    // return res.status(403).send("Session expired. Please log in again.");
     const { chatId } = req.body;
-
     try {
-        const data = (await postgres('chats').select('*').where({ chat_id: chatId })).first();
+        const data = await postgres('chats')
+            .select('chats.*', 'user1.name as user1_name', 'user2.name as user2_name')
+            .join('users as user1', 'chats.user1_id', 'user1.id')
+            .join('users as user2', 'chats.user2_id', 'user2.id')
+            .where({ 'chats.id': chatId })
+            .first();
+
         return res.status(200).send(data);
     }
     catch (err) {
+        console.error(err);
         return res.status(400);
     }
-
 
 })
 

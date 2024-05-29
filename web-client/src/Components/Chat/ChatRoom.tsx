@@ -33,7 +33,10 @@ const ChatRoom = () => {
   const [showSendButton, setShowSendButton] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
-  const [otherUser, setOtherUser] = useState("");
+  const [otherUser, setOtherUser] = useState({
+    id: "",
+    name: "",
+  });
   const heartEmoji = "❤️";
 
   const { chatId } = useParams();
@@ -44,13 +47,20 @@ const ChatRoom = () => {
 
   useEffect(() => {
     const getChat = async () => {
-      if (!chatId) {
-        console.log("No chat id");
-        return;
-      }
+      if (!chatId) return;
       const res = await getChatObject(chatId);
       setChat(res);
+
+      const token = localStorage.getItem(jwtToken);
+      if (!token) return;
+      const decoded = jwtDecode(token) as jwtTokenInterface;
+      setCurrentUser(decoded.id);
+
+      if (res.user1_id == decoded.id)
+        setOtherUser({ id: res.user2_id, name: res.user2_name });
+      else setOtherUser({ id: res.user1_id, name: res.user1_name });
     };
+
     getChat();
   }, []);
 
@@ -60,14 +70,6 @@ const ChatRoom = () => {
       if (!chatId) return;
       const res = await loadChat(chatId);
       setMessages(res);
-
-      const token = localStorage.getItem(jwtToken);
-      if (!token) return;
-      const decoded = jwtDecode(token) as jwtTokenInterface;
-      setCurrentUser(decoded.id);
-
-      if (chat.user1_id == decoded.id) setOtherUser(chat.user2_id);
-      else setOtherUser(chat.user1_id);
     };
 
     getChatMessages();
@@ -106,7 +108,7 @@ const ChatRoom = () => {
     const emitted = {
       chat_id: chatId,
       sender_id: currentUser,
-      receiver_id: otherUser,
+      receiver_id: otherUser.id,
       sent_at: time.toString(),
       message: messageInput,
     };
@@ -114,10 +116,11 @@ const ChatRoom = () => {
     if (socket)
       socket.emit("sendMessage", { messageObject: emitted, room: chatroomId });
 
+    if (!chatId) return;
     const newMsg: msg = {
       chatId: chatId,
       senderId: currentUser,
-      receiverId: otherUser,
+      receiverId: otherUser.id,
       sentAt: time.toString(),
       message: messageInput,
     };
@@ -136,66 +139,62 @@ const ChatRoom = () => {
       socket.emit("sendMessage", { message: heartEmoji, room: chatroomId });
   };
 
-  const handleImageClick = () => {};
+  // const handleImageClick = () => {};
 
   return (
-    <>
+    <div className="">
       {isUserLoggedIn ? (
         <>
           <LeftSidebar />
-          <div className="flex flex-col h-screen ml-64">
-            {/* <div className="bg-gray-800 py-3 px-4 text-white">
-      <h2 className="text-xl font-bold">users.join(' & ')</h2>
-    </div> */}
-            <div className="flex-grow overflow-y-auto">
-              <Messages messages={messages} currentUser={currentUser} />
-            </div>
-            <form
-              onSubmit={sendMessage}
-              className=" p-4 sticky bottom-0 w-full flex flex-row">
-              <div className="flex-1 rounded-2xl border-2 border-zinc-600 mr-2 pl-2 pr-2">
-                <div className="flex justify-start items-center flex-row">
-                  <div
-                    className="cursor-pointer"
-                    onClick={() =>
-                      setShowEmojiPicker(showEmojiPicker ? false : true)
-                    }>
-                    <SentimentSatisfiedAltIcon fontSize="medium" />
-                  </div>
-                  <div className="absolute bottom-16">
-                    <EmojiPicker
-                      open={showEmojiPicker}
-                      onEmojiClick={handleEmoji}
+          <div className=" ml-64">
+            <Messages messages={messages} currentUser={currentUser} />
+
+            <div className="p-4 w-full flex flex-row bg-white sticky bottom-0">
+              <form onSubmit={sendMessage} className="flex w-full">
+                <div className="flex-1 rounded-2xl border-2 border-zinc-600 mr-2 pl-2 pr-2">
+                  <div className="flex justify-start items-center flex-row relative">
+                    <div
+                      className="cursor-pointer"
+                      onClick={() =>
+                        setShowEmojiPicker(showEmojiPicker ? false : true)
+                      }>
+                      <SentimentSatisfiedAltIcon fontSize="medium" />
+                    </div>
+                    <div className="absolute bottom-16">
+                      <EmojiPicker
+                        open={showEmojiPicker}
+                        onEmojiClick={handleEmoji}
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      value={messageInput}
+                      onChange={(ev) => setMessageInput(ev.target.value)}
+                      className="flex-1 bg-transparent px-2 py-2 focus:outline-none focus:border-none "
+                      placeholder="Type a message..."
                     />
+                    {showSendButton ? (
+                      <button
+                        type="submit"
+                        className="text-purple-500 font-semibold mr-2 ">
+                        Send
+                      </button>
+                    ) : (
+                      <>
+                        <div className="p-1 ">
+                          <ImageOutlinedIcon />
+                        </div>
+                        <div
+                          className="p-1 cursor-pointer"
+                          onClick={handleHeartClick}>
+                          <FavoriteBorderOutlinedIcon />
+                        </div>
+                      </>
+                    )}
                   </div>
-                  <input
-                    type="text"
-                    value={messageInput}
-                    onChange={(ev) => setMessageInput(ev.target.value)}
-                    className="flex-1 bg-transparent px-2 py-2 focus:outline-none focus:border-none "
-                    placeholder="Type a message..."
-                  />
-                  {showSendButton ? (
-                    <button
-                      type="submit"
-                      className="text-purple-500 font-semibold mr-2 ">
-                      Send
-                    </button>
-                  ) : (
-                    <>
-                      <div className="p-1">
-                        <ImageOutlinedIcon />
-                      </div>
-                      <div
-                        className="p-1 cursor-pointer"
-                        onClick={handleHeartClick}>
-                        <FavoriteBorderOutlinedIcon />
-                      </div>
-                    </>
-                  )}
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </>
       ) : (
@@ -203,7 +202,7 @@ const ChatRoom = () => {
           <InvalidUser />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -23,9 +23,8 @@ export const useChats = () => {
   const getChatObject = async (chatId: string) => {
     const token = localStorage.getItem(jwtToken);
     if (!token) throw new Error("FRONT Session expired. Please log in again.");
-
     try {
-      const res = await fetchData(`${baseUrl}/api/chat/get-messages`, {
+      const res = await fetchData(`${baseUrl}/api/chat/get-chat`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
