@@ -70,6 +70,11 @@ const ChatRoom = () => {
       if (!chatId) return;
       const res = await loadChat(chatId);
       setMessages(res);
+      setTimeout(() => {
+        const scrollElement = document.documentElement;
+        const scrollToPosition = scrollElement.scrollHeight;
+        scrollElement.scrollTo({ top: scrollToPosition, behavior: "smooth" });
+      }, 60);
     };
 
     getChatMessages();
@@ -91,12 +96,10 @@ const ChatRoom = () => {
       console.log("Received:", message);
       setMessages((prevMessages) => [...prevMessages, message]);
       setTimeout(() => {
-        // window.scrollTo(0, document.documentElement.scrollHeight);
-
         const scrollElement = document.documentElement;
         const scrollToPosition = scrollElement.scrollHeight;
         scrollElement.scrollTo({ top: scrollToPosition, behavior: "smooth" });
-      }, 150); // Adjust the delay as needed
+      }, 60);
     });
     return () => {
       socket.off("message");
