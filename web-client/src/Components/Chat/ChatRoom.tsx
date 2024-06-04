@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import LeftSidebar from "./LeftSidebar";
 
-import { useState, useEffect, FormEvent, useRef } from "react";
+import { useState, useEffect, FormEvent } from "react";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 import { io, Socket } from "socket.io-client";
 import Messages from "./Messages";
@@ -18,7 +18,7 @@ import { jwtDecode } from "jwt-decode";
 import { jwtTokenInterface } from "../../Hooks/useUsers";
 
 export interface msg {
-  chatId: string;
+  chatId: string | undefined;
   senderId: userId;
   receiverId: userId;
   sentAt: string;
@@ -110,32 +110,40 @@ const ChatRoom = () => {
     setShowSendButton(messageInput != "" ? true : false);
   }, [messageInput]);
 
-  const sendMessage = (ev: FormEvent) => {
-    ev.preventDefault();
-    if (!messageInput.trim()) return;
-
+  const sendMessage = (messageToSend: string) => {
     const time = new Date();
     const emitted = {
       chat_id: chatId,
       sender_id: currentUser,
       receiver_id: otherUser.id,
       sent_at: time.toString(),
-      message: messageInput,
+      message: messageToSend,
     };
 
     if (socket)
       socket.emit("sendMessage", { messageObject: emitted, room: chatroomId });
 
-    if (!chatId) return;
     const newMsg: msg = {
       chatId: chatId,
       senderId: currentUser,
       receiverId: otherUser.id,
       sentAt: time.toString(),
-      message: messageInput,
+      message: messageToSend,
     };
 
     setMessages((prevMessages) => [...prevMessages, newMsg]);
+
+    setTimeout(() => {
+      const scrollElement = document.documentElement;
+      const scrollToPosition = scrollElement.scrollHeight;
+      scrollElement.scrollTo({ top: scrollToPosition, behavior: "smooth" });
+    }, 60);
+  };
+
+  const onSend = (ev: FormEvent) => {
+    ev.preventDefault();
+    if (!messageInput.trim()) return;
+    sendMessage(messageInput);
     setMessageInput("");
   };
 
@@ -145,8 +153,7 @@ const ChatRoom = () => {
   };
 
   const handleHeartClick = () => {
-    if (socket)
-      socket.emit("sendMessage", { message: heartEmoji, room: chatroomId });
+    sendMessage(heartEmoji);
   };
 
   // const handleImageClick = () => {};
@@ -162,7 +169,7 @@ const ChatRoom = () => {
             </div>
 
             <div className="p-4 w-full flex flex-row bg-white sticky bottom-0">
-              <form onSubmit={sendMessage} className="flex w-full">
+              <form onSubmit={onSend} className="flex w-full">
                 <div className="flex-1 rounded-2xl border-2 border-zinc-600 mr-2 pl-2 pr-2">
                   <div className="flex justify-start items-center flex-row relative">
                     <div
