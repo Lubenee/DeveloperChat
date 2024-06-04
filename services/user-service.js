@@ -15,13 +15,7 @@ const getAllUsers = async () => {
 // Middleware to verify JWT token from headers
 const verifyToken = (token) => {
     if (!token) return false;
-    try {
-        jwt.verify(token, JWT_SECRET);
-        return true;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
+    return jwt.verify(token, JWT_SECRET);
 };
 
 module.exports = {
