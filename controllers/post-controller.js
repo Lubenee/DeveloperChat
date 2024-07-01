@@ -45,7 +45,8 @@ router.post("/create", upload.single('image'), async (req, res) => {
         return res.status(403).send("Session expired. Please log in again.");
     const decoded = jwtDecode(token);
 
-    console.log("Adv", advantages);
+    const parsedRequirements = JSON.parse(requirements || '[]');
+    const parsedAdvantages = JSON.parse(advantages || '[]');
 
     try {
         await postgres('posts').insert({
@@ -56,15 +57,14 @@ router.post("/create", upload.single('image'), async (req, res) => {
             location,
             image_url: image_m,
             user_id: decoded.id,
-            requirements,
-            advantages
-        })
+            requirements: parsedRequirements,
+            advantages: parsedAdvantages
+        });
 
-        return res.status(201).send("Post created successfully");
-    }
-    catch (err) {
-        console.log("Server Error", err);
-        throw err;
+        res.status(201).send('Post created successfully');
+    } catch (error) {
+        console.error('Error creating post:', error);
+        res.status(500).send('Error creating post');
     }
 })
 

@@ -135,7 +135,7 @@ const Step3 = ({ setFormData, onNextStep, onPreviousStep }: StepProps) => {
   const handleNextStep = () => {
     setFormData((prevForm: PostCreateDto) => ({
       ...prevForm,
-      requirements: requirements,
+      requirements: requirements.filter((req) => req != ""),
     }));
 
     if (onNextStep) onNextStep();
@@ -206,7 +206,6 @@ const Step4 = ({ setFormData, onNextStep, onPreviousStep }: StepProps) => {
       ...prevForm,
       advantages: advantages.filter((adv) => adv != ""),
     }));
-
     if (onNextStep) onNextStep();
   };
 
