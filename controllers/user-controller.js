@@ -169,4 +169,19 @@ router.get(`/:username`, async (req, res) => {
 
 });
 
+router.delete(`/delete`, async (req, res) => {
+    const id = req.body.id;
+    try {
+        await postgres('users').where({ id: id }).delete();
+
+        return res.status(200);
+    }
+    catch (err) {
+        console.error("Error deleting user", err);
+    }
+
+});
+
+
+
 module.exports = router;

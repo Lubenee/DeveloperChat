@@ -141,7 +141,23 @@ const useUsers = () => {
       });
       return await res.json();
     } catch (err) {
-      console.error("useUsers::getUserFromToken:", err);
+      console.error("useUsers::getUsers:", err);
+    }
+  };
+
+  const deleteUser = async (token: string, id: userId) => {
+    try {
+      console.log(id);
+      await fetchData(`${baseUrl}/api/user/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? token : "",
+        },
+        body: JSON.stringify({ id: id }),
+      });
+    } catch (err) {
+      console.error("useUsers::deleteUser:", err);
     }
   };
 
@@ -154,6 +170,8 @@ const useUsers = () => {
     updateUsernameEmail,
     updatePassword,
     getUsers,
+    getUserFromId,
+    deleteUser,
   };
 };
 
