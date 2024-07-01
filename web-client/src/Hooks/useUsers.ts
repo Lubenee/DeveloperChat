@@ -18,6 +18,7 @@ export interface jwtTokenInterface {
   name: string;
   email: string;
   id: string;
+  type: userType;
 }
 
 const useUsers = () => {

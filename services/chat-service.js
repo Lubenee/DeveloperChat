@@ -5,7 +5,8 @@ require("dotenv").config();
 const initializeChat = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: ['http://192.168.100.171:5173', 'http://localhost:5173'],
+      // origin: ['http://192.168.100.171:5173', 'http://localhost:5173', 'http://192.168.43.41:5173'],
+      origin: '*',
       methods: ['GET', 'POST'],
     }
   })

@@ -7,6 +7,8 @@ export interface PostCreateDto {
   date: Date;
   location: string;
   image: File | null;
+  advantages: string[] | null;
+  requirements: string[] | null;
 }
 
 export class Post {

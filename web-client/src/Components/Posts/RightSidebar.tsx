@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PrimaryButton } from "../Core/BrandButton";
 import BrandModal from "../Core/BrandModal";
-import CreatePostWizard from "./CreatePost";
 import { PostCreateDto } from "../../types/posts/post-model";
 import { usePosts } from "../../Hooks/usePosts";
 import CustomError from "../Core/CustomError";
 import FilterSection from "./Filters/FilterSection";
 import { city } from "../../types/shared-types";
 import useValidUser from "../../Hooks/useValidUser";
+import CreateCompanyPostWizard from "./CreateCompanyPost";
+import { userType as uType } from "../../types/shared-types";
+import CreateDevPost from "./CreateDevPost";
 
 interface Props {
   availableCities: city[];
@@ -16,19 +18,14 @@ interface Props {
 
 const RightSidebar = ({ ...props }: Props) => {
   const [createPostModal, setCreatePostModal] = useState(false);
-  const [step, setStep] = useState(1);
   const [disableSubmit, setDisableSubmit] = useState(true);
   const [newPost, setNewPost] = useState<PostCreateDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { isUserLoggedIn } = useValidUser();
   const { createPost } = usePosts();
-
-  useEffect(() => {
-    setDisableSubmit(step === 4 ? false : true);
-  }, [step]);
+  const { userType }: { userType: uType } = useValidUser();
 
   const onCloseModal = () => {
-    setStep(1);
     setCreatePostModal(false);
   };
 
@@ -66,12 +63,14 @@ const RightSidebar = ({ ...props }: Props) => {
           onSubmit={handlePost}
           disableSubmit={disableSubmit}
           submitButtonText="Post">
-          <CreatePostWizard
-            setNewPost={setNewPost}
-            step={step}
-            setStep={setStep}
-            disablePostButton={setDisableSubmit}
-          />
+          {userType === uType.Developer ? (
+            <CreateCompanyPostWizard
+              setNewPost={setNewPost}
+              disablePostButton={setDisableSubmit}
+            />
+          ) : (
+            <CreateDevPost />
+          )}
         </BrandModal>
       </div>
       <div className="flex items-center justify-center h-16 border-b border-gray-800">

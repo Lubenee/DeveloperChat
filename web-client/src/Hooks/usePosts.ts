@@ -16,6 +16,8 @@ export const usePosts = () => {
     formDataToSend.append("description", item.description);
     formDataToSend.append("company", item.company);
     formDataToSend.append("location", item.location);
+    formDataToSend.append("requirements", JSON.stringify(item.requirements));
+    formDataToSend.append("advantages", JSON.stringify(item.advantages));
     if (item.image) formDataToSend.append("image", item.image);
 
     await fetchData(`${baseUrl}/${CREATE_POST}`, {
@@ -32,5 +34,16 @@ export const usePosts = () => {
     return (await res.json()) as Post[];
   };
 
-  return { createPost, getAllPosts };
+  const getPost = async (id: string) => {
+    const res = await fetchData(`${baseUrl}/api/post/get`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ id: id }),
+    });
+    return (await res.json()) as Post;
+  };
+
+  return { createPost, getAllPosts, getPost };
 };

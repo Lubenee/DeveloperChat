@@ -17,6 +17,7 @@ const { getAllUsers, verifyToken } = require("../services/user-service");
 //   id: string,
 //   email: string,
 //   name: string,
+//   type: userType,
 // }
 
 router.get("/", async (req, res) => {
@@ -68,7 +69,7 @@ router.post(`/login`, async (req, res) => {
 
         const user = await postgres("users").where({ id: userLogin.user_id });
         const token = jwt.sign(
-            { id: user[0].id, email: user[0].email, name: user[0].name },
+            { id: user[0].id, email: user[0].email, name: user[0].name, type: user[0].type },
             JWT_SECRET,
             {
                 expiresIn: "1h",

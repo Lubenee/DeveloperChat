@@ -2,10 +2,9 @@ const express = require("express");
 const postgres = require("../postgres");
 const router = express.Router();
 const multer = require('multer');
-const { DateTime } = require('luxon');
 
 
-const { getAllPosts } = require("../services/post-service");
+const { getAllPosts, getPost } = require("../services/post-service");
 const { verifyToken } = require("../services/user-service");
 const { default: jwtDecode } = require("jwt-decode");
 
@@ -26,11 +25,15 @@ router.get("/", async (req, res) => {
     res.status(200).send(posts);
 })
 
-router.post("/create", upload.single('image'), async (req, res) => {
-    const { title, company, description, location } = req.body;
+router.post("/get", async (req, res) => {
+    const { id } = req.body;
+    const post = await getPost(id);
+    return res.status(200).send(post);
+})
 
-    if (req.file)
-        console.log(req.file);
+router.post("/create", upload.single('image'), async (req, res) => {
+    const { title, company, description, location, requirements, advantages } = req.body;
+
     const image_m = req.file ? req.file.filename : null;
     const date = new Date();
 
@@ -42,8 +45,21 @@ router.post("/create", upload.single('image'), async (req, res) => {
         return res.status(403).send("Session expired. Please log in again.");
     const decoded = jwtDecode(token);
 
+    console.log("Adv", advantages);
+
     try {
-        await postgres('posts').insert({ title, company, description, date, location, image_url: image_m, user_id: decoded.id });
+        await postgres('posts').insert({
+            title,
+            company,
+            description,
+            date,
+            location,
+            image_url: image_m,
+            user_id: decoded.id,
+            requirements,
+            advantages
+        })
+
         return res.status(201).send("Post created successfully");
     }
     catch (err) {

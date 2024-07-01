@@ -19,7 +19,9 @@ const PostItem = ({ post }: PostProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-2xl hover:cursor-pointer hover:bg-gray-100">
+    <div
+      className="bg-white rounded-lg shadow-md hover:shadow-2xl hover:cursor-pointer hover:bg-gray-100"
+      onClick={() => navigation(`/posts/${post.id}`)}>
       <img
         src={`${baseUrl}/uploads/${post.image_url}`}
         alt={`${post.title}`}

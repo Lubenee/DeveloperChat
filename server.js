@@ -19,6 +19,7 @@ app.use('/api', routers);
 app.use('/uploads', express.static('./uploads'));
 
 server.listen(PORT, () => {
+  console.log(server.address());
   console.log(`DeveloperChat server is running on port ${PORT}`);
 });
 

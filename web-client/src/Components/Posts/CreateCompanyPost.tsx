@@ -1,10 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { PrimaryButton, SecondaryButton } from "../Core/BrandButton";
 import { PostCreateDto } from "../../types/posts/post-model";
+import CustomError from "../Core/CustomError";
 
 interface StepProps {
   formData: PostCreateDto;
-  setFormData: (newVal: PostCreateDto) => void;
+  setFormData: React.Dispatch<React.SetStateAction<PostCreateDto>>;
   onNextStep?: () => void;
   onPreviousStep?: () => void;
   onSubmit?: () => void;
@@ -20,9 +21,7 @@ const Step1 = ({ formData, setFormData, onNextStep }: StepProps) => {
     setFormData({ ...formData, [name]: value });
   };
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    // Destructure the event object to get the name and value of the input field
     const { name, value } = event.target;
-    // ex: ['title'] = value;
     setFormData({ ...formData, [name]: value });
   };
   const [disableNext, setDisableNext] = useState(true);
@@ -108,7 +107,145 @@ const Step2 = ({
   );
 };
 
-const Step3 = ({
+const Step3 = ({ setFormData, onNextStep, onPreviousStep }: StepProps) => {
+  const [disableNext] = useState(false);
+  const [requirements, setRequirements] = useState<string[]>([""]);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleRequirementChange = (index: number, value: string) => {
+    if (value == "") {
+      setError("Can't have empty requirement.");
+      return;
+    }
+    setError(null); // Clear error if value is not empty
+    const newRequirements = [...requirements];
+    newRequirements[index] = value;
+    setRequirements(newRequirements);
+  };
+
+  const handleAddRequirement = () => {
+    if (requirements[requirements.length - 1] == "") {
+      setError("Can't have empty requirements.");
+      return;
+    }
+    setError(null); // Clear error if adding a new advantage
+    setRequirements([...requirements, ""]);
+  };
+
+  const handleNextStep = () => {
+    setFormData((prevForm: PostCreateDto) => ({
+      ...prevForm,
+      requirements: requirements,
+    }));
+
+    if (onNextStep) onNextStep();
+  };
+
+  return (
+    <div className="shadow-md bg-white rounded px-8 pt-6 pb-8 mb-4 flex justify-start flex-col">
+      <h2 className="text-xl font-semibold mb-4">Step 3: Requirements</h2>
+      <form>
+        {requirements.map((requirement, index) => (
+          <div key={index} className="mb-2 flex">
+            <input
+              type="text"
+              value={requirement}
+              onChange={(e) => handleRequirementChange(index, e.target.value)}
+              className="flex-grow border border-gray-300 rounded-md py-2 px-3 mr-2"
+              placeholder={`Requirement ${index + 1}`}
+            />
+            {index === requirements.length - 1 && (
+              <PrimaryButton type="button" onClick={handleAddRequirement}>
+                Add
+              </PrimaryButton>
+            )}
+          </div>
+        ))}
+      </form>
+      {error && <CustomError message={error} />}
+      <div className="flex items-center justify-between">
+        <SecondaryButton onClick={onPreviousStep}>Previous</SecondaryButton>
+        <PrimaryButton
+          type="button"
+          onClick={handleNextStep}
+          disabled={disableNext}>
+          Next
+        </PrimaryButton>
+      </div>
+    </div>
+  );
+};
+
+const Step4 = ({ setFormData, onNextStep, onPreviousStep }: StepProps) => {
+  const [disableNext] = useState(false);
+  const [advantages, setAdvantages] = useState<string[]>([""]);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAdvantageChange = (index: number, value: string) => {
+    if (value == "") {
+      setError("Can't have empty advantage.");
+      return;
+    }
+    setError(null); // Clear error if value is not empty
+    const newAdvantages = [...advantages];
+    newAdvantages[index] = value;
+    setAdvantages(newAdvantages);
+  };
+
+  const handleAddAdvantage = () => {
+    if (advantages[advantages.length - 1] == "") {
+      setError("Can't have empty advantage.");
+      return;
+    }
+    setError(null); // Clear error if adding a new advantage
+    setAdvantages([...advantages, ""]);
+  };
+
+  const handleNextStep = () => {
+    setFormData((prevForm: PostCreateDto) => ({
+      ...prevForm,
+      advantages: advantages.filter((adv) => adv != ""),
+    }));
+
+    if (onNextStep) onNextStep();
+  };
+
+  return (
+    <div className="shadow-md bg-white rounded px-8 pt-6 pb-8 mb-4 flex justify-start flex-col">
+      <h2 className="text-xl font-semibold mb-4">Step 4: Advantages</h2>
+      <form>
+        {advantages.map((advantage, index) => (
+          <div key={index} className="mb-2 flex">
+            <input
+              type="text"
+              value={advantage}
+              onChange={(e) => handleAdvantageChange(index, e.target.value)}
+              className="flex-grow border border-gray-300 rounded-md py-2 px-3 mr-2"
+              placeholder={`Advantage ${index + 1}`}
+            />
+            {index === advantages.length - 1 && (
+              <PrimaryButton type="button" onClick={handleAddAdvantage}>
+                Add
+              </PrimaryButton>
+            )}
+          </div>
+        ))}
+      </form>
+      {error && <CustomError message={error} />}
+      <div className="flex items-center justify-between">
+        <SecondaryButton onClick={onPreviousStep}>Previous</SecondaryButton>
+        <PrimaryButton
+          type="button"
+          onClick={handleNextStep}
+          disabled={disableNext}>
+          Next
+        </PrimaryButton>
+      </div>
+    </div>
+  );
+};
+
+const Step5 = ({
   formData,
   setFormData,
   onPreviousStep,
@@ -141,7 +278,7 @@ const Step3 = ({
   return (
     <div className="shadow-md bg-white rounded px-8 pt-6 pb-8 mb-4  flex justify-start flex-col">
       <h2 className="text-xl font-semibold mb-4">
-        Step 3: Specify Location and Set Company Image
+        Step 5: Specify Location and Set Company Image
       </h2>
       <form encType="multipart/form-data" method="post">
         <input
@@ -176,18 +313,12 @@ const Step3 = ({
   );
 };
 interface Props {
-  step: number;
-  setStep: (newStep: number) => void;
   setNewPost: (newPost: PostCreateDto) => void;
   disablePostButton: (newVal: boolean) => void;
 }
 
-const CreatePostWizard = ({
-  step,
-  setStep,
-  setNewPost,
-  disablePostButton,
-}: Props) => {
+const CreateCompanyPostWizard = ({ setNewPost, disablePostButton }: Props) => {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<PostCreateDto>({
     title: "",
     description: "",
@@ -195,6 +326,8 @@ const CreatePostWizard = ({
     date: new Date(),
     location: "",
     image: null,
+    advantages: [],
+    requirements: [],
   });
 
   const handleNextStep = () => {
@@ -227,6 +360,22 @@ const CreatePostWizard = ({
         <Step3
           formData={formData}
           setFormData={setFormData}
+          onNextStep={handleNextStep}
+          onPreviousStep={handlePreviousStep}
+        />
+      )}
+      {step === 4 && (
+        <Step4
+          formData={formData}
+          setFormData={setFormData}
+          onNextStep={handleNextStep}
+          onPreviousStep={handlePreviousStep}
+        />
+      )}
+      {step === 5 && (
+        <Step5
+          formData={formData}
+          setFormData={setFormData}
           onPreviousStep={handlePreviousStep}
           onNextStep={handleNextStep}
           disablePostButton={disablePostButton}
@@ -237,4 +386,4 @@ const CreatePostWizard = ({
   );
 };
 
-export default CreatePostWizard;
+export default CreateCompanyPostWizard;
