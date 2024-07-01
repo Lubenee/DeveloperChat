@@ -39,36 +39,24 @@ const UsersTable: React.FC = () => {
   return (
     <div className="container mx-auto py-8">
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 bg-gray-200 text-gray-600 font-semibold text-left border-b border-gray-200">
-                Name
-              </th>
-              <th className="py-2 px-4 bg-gray-200 text-gray-600 font-semibold text-left border-b border-gray-200">
-                Email
-              </th>
-              <th className="py-2 px-4 bg-gray-200 text-gray-600 font-semibold text-left border-b border-gray-200">
-                Account Type
-              </th>
-              <th className="py-2 px-4 bg-gray-200 text-gray-600 font-semibold text-left border-b border-gray-200">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {userList.map((user) => (
-              <UserRow
-                key={user.id}
-                id={user.id}
-                name={user.name}
-                email={user.email}
-                accountType={user.type}
-                onDelete={handleDeleteUser}
-              />
-            ))}
-          </tbody>
-        </table>
+        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <div className="flex justify-between bg-gray-100 px-4 py-2">
+            <div className="font-semibold">Name</div>
+            <div className="font-semibold">Email</div>
+            <div className="font-semibold">Account Type</div>
+            <div className="font-semibold">Actions</div>
+          </div>
+          {userList.map((user) => (
+            <UserRow
+              key={user.id}
+              id={user.id}
+              name={user.name}
+              email={user.email}
+              accountType={user.type}
+              onDelete={handleDeleteUser}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

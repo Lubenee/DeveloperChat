@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { userId } from "../../types/shared-types";
 import { PrimaryButton } from "../Core/BrandButton";
+import BrandModal from "../Core/BrandModal";
 
 interface UserRowProps {
   id: userId;
@@ -10,6 +12,12 @@ interface UserRowProps {
 }
 
 const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const getAccountTypeLabel = (accountType: number): string => {
     switch (accountType) {
       case 0:
@@ -24,16 +32,33 @@ const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
   };
 
   return (
-    <tr className="hover:bg-gray-100">
-      <td className="py-2 px-4 border-b border-gray-200">{name}</td>
-      <td className="py-2 px-4 border-b border-gray-200">{email}</td>
-      <td className="py-2 px-4 border-b border-gray-200">
-        {getAccountTypeLabel(accountType)}
-      </td>
-      <td className="py-2 px-4 border-b border-gray-200">
-        <PrimaryButton onClick={() => onDelete(id)}>Delete</PrimaryButton>
-      </td>
-    </tr>
+    <>
+      <div className="flex items-end hover:bg-gray-100 justify-between">
+        <div className="py-2 px-4 border-b border-gray-200 flex-1">
+          <div>{name}</div>
+        </div>
+        <div className="py-2 px-4 border-b border-gray-200 flex-1">{email}</div>
+        <div className="py-2 px-4 border-b border-gray-200 flex-1">
+          {getAccountTypeLabel(accountType)}
+        </div>
+        <div className="py-2 px-4 border-b border-gray-200 flex-1">
+          <PrimaryButton onClick={() => setIsModalOpen(true)}>
+            Delete
+          </PrimaryButton>
+        </div>
+      </div>
+      <BrandModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Are you sure you want to delete this user?"
+        onSubmit={() => {
+          onDelete(id);
+          setIsModalOpen(false);
+        }}
+        submitButtonText="Delete">
+        <p>Confirmation message or additional content can go here.</p>
+      </BrandModal>
+    </>
   );
 };
 
