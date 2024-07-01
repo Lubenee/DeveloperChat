@@ -1,4 +1,4 @@
-import { jwtToken, userId } from "../types/shared-types";
+import { jwtToken } from "../types/shared-types";
 import { fetchData } from "../utils/fetchUtils";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 

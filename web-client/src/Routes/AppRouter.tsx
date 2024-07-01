@@ -9,6 +9,7 @@ import MyProfilePage from "../Pages/MyProfilePage";
 import NotFoundPage from "../Pages/NotFoundPage";
 import AboutPage from "../Pages/AboutPage";
 import ChatRoom from "../Components/Chat/ChatRoom";
+import AdminPage from "../Pages/AdminPage";
 import Post from "../Components/Posts/Post";
 
 const AppRouter = () => {
@@ -24,6 +25,7 @@ const AppRouter = () => {
       <Route path="/test" element={<TestPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/direct/:chatId" element={<ChatRoom />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="/posts/:id" element={<Post />} />
     </Routes>
   );

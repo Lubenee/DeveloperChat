@@ -130,6 +130,21 @@ const useUsers = () => {
     }
   };
 
+  const getUsers = async (token: string) => {
+    try {
+      const res = await fetchData(`${baseUrl}/api/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? token : "",
+        },
+      });
+      return await res.json();
+    } catch (err) {
+      console.error("useUsers::getUserFromToken:", err);
+    }
+  };
+
   return {
     getDev,
     addUser,
@@ -138,6 +153,7 @@ const useUsers = () => {
     verifyToken,
     updateUsernameEmail,
     updatePassword,
+    getUsers,
   };
 };
 

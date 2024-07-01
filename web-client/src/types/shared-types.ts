@@ -6,6 +6,7 @@ export type avatar = string | null;
 export enum userType {
   Developer = 0,
   Company,
+  Admin,
   Undefined,
 }
 

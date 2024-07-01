@@ -18,6 +18,7 @@ export class User {
     public name: string,
     public email: string,
     public id: userId,
-    public avatar: avatar = null
+    public avatar: avatar = null,
+    public type: number = 3
   ) {}
 }

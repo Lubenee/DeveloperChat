@@ -11,13 +11,14 @@ interface Props {
 const Navbar = ({ isUserLoggedIn }: Props) => {
   const navigate = useNavigate();
   const [name, setName] = useState<string | null>(null);
-
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   useEffect(() => {
     if (!isUserLoggedIn) return;
     const token = localStorage.getItem(jwtToken);
     if (!token) return;
     const decode: jwtTokenInterface = jwtDecode(token);
     setName(decode.name);
+    if (decode.type === 2) setIsAdmin(true);
   }, [isUserLoggedIn]);
 
   return (
@@ -45,7 +46,14 @@ const Navbar = ({ isUserLoggedIn }: Props) => {
             onClick={() => navigate("/test")}>
             Services
           </div>
-          <div className="text-gray-400 hover:text-white">Contact</div>
+          <div className="text-gray-400 hover:text-white mr-4">Contact</div>
+          {isAdmin && (
+            <div
+              className="text-gray-400 hover:text-white mr-4"
+              onClick={() => navigate("/admin")}>
+              Users
+            </div>
+          )}
         </div>
         {isUserLoggedIn === false ? (
           <div className="flex items-center">
