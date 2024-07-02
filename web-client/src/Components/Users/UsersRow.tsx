@@ -4,14 +4,13 @@ import { PrimaryButton } from "../Core/BrandButton";
 import BrandModal from "../Core/BrandModal";
 
 interface UserRowProps {
-  id: userId;
   name: string;
   email: string;
   accountType: number;
-  onDelete: (id: userId) => void;
+  onDelete: () => void;
 }
 
-const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
+const UserRow = ({ name, email, accountType, onDelete }: UserRowProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const closeModal = () => {
@@ -52,7 +51,7 @@ const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
         onClose={closeModal}
         title="Are you sure you want to delete this user?"
         onSubmit={() => {
-          onDelete(id);
+          onDelete();
           setIsModalOpen(false);
         }}
         submitButtonText="Delete">

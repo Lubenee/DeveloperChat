@@ -8,17 +8,6 @@ const UsersTable: React.FC = () => {
   const [userList, setUserList] = useState<User[]>([]);
   const { getUsers, deleteUser } = useUsers();
 
-  const handleDeleteUser = async (id: userId) => {
-    try {
-      const token = localStorage.getItem(jwtToken);
-      if (!token) return;
-      await deleteUser(token, id);
-      setUserList((prevUsers) => prevUsers.filter((user) => user.id != id));
-    } catch (error) {
-      console.error("Error deleting user", error);
-    }
-  };
-
   useEffect(() => {
     const fetchUsers = async () => {
       const token = localStorage.getItem(jwtToken);
@@ -36,6 +25,14 @@ const UsersTable: React.FC = () => {
     fetchUsers();
   }, []);
 
+  const handleDeleteUser = async (id: userId) => {
+    console.log("here");
+    const token = localStorage.getItem(jwtToken);
+    if (!token) return;
+    await deleteUser(token, id);
+    setUserList((prevUsers) => prevUsers.filter((user) => user.id != id));
+  };
+
   return (
     <div className="container mx-auto py-8">
       <div className="overflow-x-auto">
@@ -49,11 +46,12 @@ const UsersTable: React.FC = () => {
           {userList.map((user) => (
             <UserRow
               key={user.id}
-              id={user.id}
               name={user.name}
               email={user.email}
               accountType={user.type}
-              onDelete={handleDeleteUser}
+              onDelete={() => {
+                handleDeleteUser(user.id);
+              }}
             />
           ))}
         </div>
