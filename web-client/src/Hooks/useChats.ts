@@ -1,4 +1,4 @@
-import { jwtToken } from "../types/shared-types";
+import { jwtToken, userId } from "../types/shared-types";
 import { fetchData } from "../utils/fetchUtils";
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 
@@ -58,5 +58,26 @@ export const useChats = () => {
     }
   };
 
-  return { getChats, loadChat, getChatObject };
+  const createChat = async (user1_id: userId, user2_id: userId) => {
+    const token = localStorage.getItem(jwtToken);
+    if (!token) throw new Error("FRONT Session expired. Please log in again.");
+
+    try {
+      const res = await fetchData(`${baseUrl}/api/chat/create`, {
+        method: "POST",
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user1_id, user2_id }),
+      });
+
+      return await res.json();
+    } catch (error) {
+      console.error("Error creating chat:", error);
+      throw error;
+    }
+  };
+
+  return { getChats, loadChat, getChatObject, createChat };
 };

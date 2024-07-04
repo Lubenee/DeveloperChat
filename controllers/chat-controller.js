@@ -81,4 +81,22 @@ router.post('/get-messages', async (req, res) => {
     }
 })
 
+router.post('/create', async (req, res) => {
+    const token = req.headers.authorization;
+    if (!verifyToken(token))
+        return res.status(403).send("Session expired. Please log in again.");
+
+    const { user1_id, user2_id } = req.body;
+    try {
+        const [newChat] = await postgres('chats')
+            .insert({ user1_id, user2_id })
+            .returning('*'); // returning '*' returns the entire inserted row
+
+        return res.status(200).json({ roomId: newChat.room_id });
+    }
+    catch (err) {
+        return res.status(400);
+    }
+})
+
 module.exports = router;

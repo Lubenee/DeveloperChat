@@ -26,7 +26,7 @@ const HomePage = () => {
       setPosts(res);
     };
     getPosts();
-  }, [posts]);
+  }, []);
 
   useEffect(() => {
     // Calculate city counts when posts change

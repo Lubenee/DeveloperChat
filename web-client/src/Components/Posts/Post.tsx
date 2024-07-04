@@ -11,6 +11,10 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LeftSidebar from "../Chat/LeftSidebar";
 import useValidUser from "../../Hooks/useValidUser";
 import { PrimaryButton } from "../Core/BrandButton";
+import { jwtToken } from "../../types/shared-types";
+import { jwtDecode } from "jwt-decode";
+import { jwtTokenInterface } from "../../Hooks/useUsers";
+import { useChats } from "../../Hooks/useChats";
 
 const baseUrl = import.meta.env.VITE_SERVER_HOST;
 
@@ -20,6 +24,7 @@ const Post = () => {
   const navigation = useNavigate();
   const [post, setPost] = useState<PostModel | null>(null);
   const { isUserLoggedIn } = useValidUser();
+  const { createChat } = useChats();
 
   useEffect(() => {
     if (!id) {
@@ -41,7 +46,16 @@ const Post = () => {
     fetchPost();
   }, []);
 
-  const onMessageUser = () => {};
+  const onMessageUser = async () => {
+    const token = localStorage.getItem(jwtToken);
+    if (!token || !post?.user_id) return;
+    const decoded = jwtDecode(token) as jwtTokenInterface;
+
+    console.log("sending..");
+    const res = (await createChat(decoded.id, post?.user_id)) as string;
+    console.log("res", res);
+    navigation(`/direct/${res}`);
+  };
 
   return (
     <>
@@ -111,7 +125,9 @@ const Post = () => {
                 ))}
             </ul>
           </div>
-          <PrimaryButton onClick={onMessageUser}>Message User</PrimaryButton>
+          <PrimaryButton onClick={() => onMessageUser()}>
+            Message User
+          </PrimaryButton>
         </div>
       </div>
     </>

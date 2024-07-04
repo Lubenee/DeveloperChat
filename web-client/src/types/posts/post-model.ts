@@ -20,7 +20,7 @@ export class Post {
     public location: string,
     public image_url: string,
     public id: postId,
-    public userId: userId,
+    public user_id: userId,
     public fullTime?: boolean,
     public payment?: number,
     public requirements?: string[],
