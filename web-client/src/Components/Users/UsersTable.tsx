@@ -43,9 +43,9 @@ const UsersTable: React.FC = () => {
             <div className="font-semibold">Account Type</div>
             <div className="font-semibold">Actions</div>
           </div>
-          {userList.map((user) => (
+          {userList.map((user, index) => (
             <UserRow
-              key={user.id}
+              key={index}
               name={user.name}
               email={user.email}
               accountType={user.type}

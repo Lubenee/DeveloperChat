@@ -90,6 +90,7 @@ const ChatRoom = () => {
     };
   }, []);
 
+  // Update messages
   useEffect(() => {
     if (!socket) return;
     socket.on("receiveMessage", (message) => {
@@ -156,6 +157,7 @@ const ChatRoom = () => {
     sendMessage(heartEmoji);
   };
 
+  //todo
   // const handleImageClick = () => {};
 
   return (

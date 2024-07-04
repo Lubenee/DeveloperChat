@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { userId } from "../../types/shared-types";
 import { PrimaryButton } from "../Core/BrandButton";
 import BrandModal from "../Core/BrandModal";
-import EditUserDataForm from "./EditUserDataForm";
 
 interface UserRowProps {
   name: string;
@@ -11,15 +9,13 @@ interface UserRowProps {
   onDelete: () => void;
 }
 
-const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
+const UserRow = ({ name, email, accountType, onDelete }: UserRowProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-  };
+
   const getAccountTypeLabel = (accountType: number): string => {
     switch (accountType) {
       case 0:
@@ -44,42 +40,24 @@ const UserRow = ({ id, name, email, accountType, onDelete }: UserRowProps) => {
           {getAccountTypeLabel(accountType)}
         </div>
         <div className="py-2 px-4 border-b border-gray-200 flex-1">
-          <PrimaryButton onClick={() => setIsDeleteModalOpen(true)}>
+          <PrimaryButton onClick={() => setIsModalOpen(true)}>
             Delete
           </PrimaryButton>
         </div>
         <div className="py-2 px-4 border-b border-gray-200 flex-1">
-          <PrimaryButton onClick={() => setIsEditModalOpen(true)}>
-            Edit
-          </PrimaryButton>
+          <PrimaryButton>Edit</PrimaryButton>
         </div>
       </div>
       <BrandModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-        title="Are you sure you want to delete this user?"
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title="Delete user"
         onSubmit={() => {
-          onDelete(id);
+          onDelete();
           setIsModalOpen(false);
         }}
         submitButtonText="Delete">
-        <p>Confirmation message or additional content can go here.</p>
-      </BrandModal>
-      <BrandModal
-        isOpen={isEditModalOpen}
-        onClose={closeEditModal}
-        title="Are you sure you want to delete this user?"
-        onSubmit={() => {
-          onDelete(id);
-          setIsEditModalOpen(false);
-        }}
-        submitButtonText="Save changes">
-        <EditUserDataForm
-          id={id}
-          initialName={name}
-          initialEmail={email}
-          initialAccountType={accountType}
-        />
+        <p>Are you sure you want to delete this user?</p>
       </BrandModal>
     </>
   );

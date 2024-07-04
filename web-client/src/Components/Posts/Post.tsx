@@ -52,9 +52,9 @@ const Post = () => {
     const decoded = jwtDecode(token) as jwtTokenInterface;
 
     console.log("sending..");
-    const res = (await createChat(decoded.id, post?.user_id)) as string;
+    const res = await createChat(decoded.id, post?.user_id);
     console.log("res", res);
-    navigation(`/direct/${res}`);
+    navigation(`/direct/${res.roomId}`);
   };
 
   return (
