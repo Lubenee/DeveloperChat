@@ -115,8 +115,9 @@ router.patch(`/email-username-update`, async (req, res) => {
 
         //See if the email is available
         if (email != userToUpdate.email) {
-            const isEmailTaken = await postgres('users').where({ email });
-            if (isEmailTaken)
+            const isEmailTaken = await postgres('users').where({ email: email });
+            console.log(isEmailTaken);
+            if (isEmailTaken && isEmailTaken.length > 1)
                 return res.status(403).send("Email already taken.");
         }
 
